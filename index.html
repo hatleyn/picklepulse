@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <title>PicklePulse — Pickleball Stats & Rating Tracker</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <style>
     :root {
       --bg: #050816;
@@ -17,438 +18,186 @@
       --radius-xl: 24px;
     }
 
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
     body {
       margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-        "Segoe UI", sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
       background: radial-gradient(circle at top, #1e293b 0, #020617 40%, #000 100%);
       color: var(--text);
       padding: 16px;
     }
 
-    .app-shell {
-      max-width: 960px;
-      margin: 0 auto 40px;
-    }
+    .app-shell { max-width: 960px; margin: 0 auto 40px; }
 
     header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 18px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; margin-bottom: 18px;
     }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+    .brand { display: flex; align-items: center; gap: 10px; }
 
     .brand-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 999px;
+      width: 40px; height: 40px; border-radius: 999px;
       background: radial-gradient(circle at 30% 20%, #4ade80, #22c55e);
       box-shadow: 0 0 20px rgba(34, 197, 94, 0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      color: #022c22;
-      font-size: 20px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; color: #022c22; font-size: 20px;
     }
 
-    .brand-text-title {
-      font-weight: 700;
-      font-size: 18px;
-      letter-spacing: 0.02em;
-    }
-
-    .brand-text-sub {
-      font-size: 12px;
-      color: var(--muted);
-    }
+    .brand-text-title { font-weight: 700; font-size: 18px; letter-spacing: 0.02em; }
+    .brand-text-sub { font-size: 12px; color: var(--muted); }
 
     header .tagline {
-      font-size: 12px;
-      text-align: right;
-      color: var(--muted);
-      max-width: 180px;
+      font-size: 12px; color: var(--muted); max-width: 180px; text-align: right;
+    }
+
+    @media (max-width: 768px) {
+      header { flex-direction: column; align-items: flex-start; }
+      header .tagline { text-align: left; }
     }
 
     .grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+      display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
       gap: 16px;
     }
 
     @media (max-width: 768px) {
-      .grid {
-        grid-template-columns: minmax(0, 1fr);
-      }
-      header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      header .tagline {
-        text-align: left;
-      }
+      .grid { grid-template-columns: minmax(0, 1fr); }
     }
 
     .card {
       background: radial-gradient(circle at top left, #111827, #020617);
-      border-radius: var(--radius-xl);
-      padding: 16px 14px 14px;
+      border-radius: var(--radius-xl); padding: 16px 14px 14px;
       border: 1px solid var(--border);
       box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
     }
 
     .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 12px;
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 10px; margin-bottom: 12px;
     }
 
-    .card-title {
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .card-subtitle {
-      font-size: 11px;
-      color: var(--muted);
-    }
+    .card-title { font-size: 14px; font-weight: 600; }
+    .card-subtitle { font-size: 11px; color: var(--muted); }
 
     .pill {
-      font-size: 11px;
-      padding: 4px 8px;
-      border-radius: 999px;
+      font-size: 11px; padding: 4px 8px; border-radius: 999px;
       background: rgba(15, 23, 42, 0.9);
       border: 1px solid rgba(148, 163, 184, 0.4);
       color: var(--muted);
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
+      display: inline-flex; align-items: center; gap: 4px;
     }
 
     form {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 8px 12px;
     }
 
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .field-full {
-      grid-column: 1 / -1;
-    }
+    .field { display: flex; flex-direction: column; gap: 4px; }
+    .field-full { grid-column: 1 / -1; }
 
     label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
+      font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
       color: var(--muted);
     }
 
     input, select, textarea {
-      background: #020617;
-      border-radius: 12px;
-      border: 1px solid #1f2937;
-      padding: 8px 10px;
-      color: var(--text);
-      font-size: 13px;
-      outline: none;
-      width: 100%;
+      background: #020617; border-radius: 12px;
+      border: 1px solid #1f2937; padding: 8px 10px;
+      color: var(--text); font-size: 13px; outline: none;
     }
+
+    textarea { resize: vertical; min-height: 48px; }
 
     input:focus, select:focus, textarea:focus {
       border-color: var(--accent);
       box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.5);
     }
 
-    textarea {
-      resize: vertical;
-      min-height: 48px;
-      max-height: 120px;
-      line-height: 1.4;
-    }
+    .score-inputs { display: flex; align-items: center; gap: 4px; }
+    .score-inputs input { text-align: center; }
 
-    .score-inputs {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .score-inputs input {
-      text-align: center;
-    }
-
-    .score-inputs span {
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    .chips-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 6px;
-    }
+    .chips-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
 
     .chip-toggle {
-      font-size: 11px;
-      padding: 4px 8px;
-      border-radius: 999px;
-      border: 1px solid #1f2937;
-      background: #020617;
-      cursor: pointer;
-      color: var(--muted);
+      font-size: 11px; padding: 4px 8px; border-radius: 999px;
+      border: 1px solid #1f2937; background: #020617;
+      cursor: pointer; color: var(--muted);
     }
 
     .chip-toggle.active {
-      border-color: var(--accent);
-      background: var(--accent-soft);
-      color: var(--accent);
+      border-color: var(--accent); background: var(--accent-soft); color: var(--accent);
     }
 
-    .btn-row {
-      display: flex;
-      gap: 8px;
-      margin-top: 10px;
-    }
+    .btn-row { display: flex; gap: 8px; margin-top: 10px; }
 
     button {
-      border-radius: 999px;
-      border: none;
-      padding: 9px 12px;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: transform 0.12s ease, box-shadow 0.12s ease,
-        background 0.12s ease;
-      white-space: nowrap;
+      border-radius: 999px; border: none; padding: 9px 12px;
+      font-size: 13px; font-weight: 500; cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center;
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, #22c55e, #4ade80);
-      color: #022c22;
-      box-shadow: 0 10px 25px rgba(34, 197, 94, 0.55);
-      flex: 1;
+      flex: 1; background: linear-gradient(135deg, #22c55e, #4ade80);
+      color: #022c22; box-shadow: 0 10px 25px rgba(34,197,94,0.55);
     }
 
-    .btn-primary:active {
-      transform: translateY(1px) scale(0.99);
-      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+    .btn-ghost { background: rgba(15,23,42,0.95); border: 1px solid #1f2937; color: var(--muted); }
+
+    .btn-ghost.danger { border-color: rgba(248,113,113,0.7); color: #fecaca; }
+    .btn-ghost.secondary { border-color: rgba(148,163,184,0.6); }
+
+    .rr-block {
+      margin-top: 12px; padding-top: 10px; border-top: 1px dashed #1f2937;
+      font-size: 11px; color: var(--muted);
     }
 
-    .btn-ghost {
-      background: rgba(15, 23, 42, 0.95);
-      color: var(--muted);
-      border: 1px solid #1f2937;
-    }
+    .rr-title { font-size: 11px; font-weight: 600; color: #e5e7eb; margin-bottom: 6px; }
 
-    .btn-ghost.danger {
-      border-color: rgba(248, 113, 113, 0.7);
-      color: #fecaca;
-    }
-
-    .btn-ghost.secondary {
-      border-color: rgba(148, 163, 184, 0.6);
-    }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-
-    .stat-card {
-      background: radial-gradient(circle at top, #020617, #020617);
-      border-radius: 16px;
-      border: 1px solid #111827;
-      padding: 10px 10px 9px;
-    }
-
-    .stat-label {
-      font-size: 11px;
-      color: var(--muted);
-      margin-bottom: 2px;
-    }
-
-    .stat-value {
-      font-size: 18px;
-      font-weight: 700;
-    }
-
-    .stat-tag {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--accent);
-      margin-top: 2px;
-    }
-
-    .stat-sub {
-      font-size: 10px;
-      color: var(--muted);
-      margin-top: 2px;
-    }
-
-    .rating-card {
-      border-radius: 16px;
-      padding: 10px 10px 9px;
-      border: 1px solid rgba(34, 197, 94, 0.7);
-      background: radial-gradient(circle at top, #022c22, #020617);
-      box-shadow: 0 12px 30px rgba(16, 185, 129, 0.35);
-    }
+    .rr-list { margin-top: 6px; padding-left: 14px; }
+    .rr-list li { margin-bottom: 4px; }
 
     .matches {
-      max-height: 330px;
-      overflow: auto;
-      border-radius: 14px;
-      border: 1px solid #111827;
-      background: radial-gradient(circle at top left, #020617, #020617);
+      max-height: 330px; overflow: auto; border-radius: 14px;
+      border: 1px solid #111827; background: #020617;
     }
 
     .match-row {
-      display: grid;
-      grid-template-columns: 1.2fr 0.9fr 0.6fr 0.6fr;
-      padding: 8px 10px;
-      font-size: 11px;
-      border-bottom: 1px solid rgba(15, 23, 42, 0.9);
-      align-items: center;
-      gap: 6px;
+      display: grid; grid-template-columns: 1.2fr 0.9fr 0.6fr 0.6fr;
+      padding: 8px 10px; font-size: 11px;
+      border-bottom: 1px solid rgba(15,23,42,0.9);
+      align-items: center; gap: 6px;
     }
 
     .match-row.header {
-      position: sticky;
-      top: 0;
-      z-index: 2;
-      background: linear-gradient(to bottom, #020617, #020617);
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--muted);
-      font-size: 10px;
-    }
-
-    .match-row:last-child {
-      border-bottom: none;
-    }
-
-    .match-main {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .match-title {
-      font-size: 11px;
-    }
-
-    .match-meta {
-      font-size: 10px;
+      position: sticky; top: 0; z-index: 2;
+      background: #020617; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.06em;
       color: var(--muted);
     }
+
+    .match-main { display: flex; flex-direction: column; gap: 2px; }
+    .match-title { font-size: 11px; }
+    .match-meta { font-size: 10px; color: var(--muted); }
 
     .badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2px 6px;
-      border-radius: 999px;
-      font-size: 10px;
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      color: var(--muted);
+      display: inline-flex; align-items: center;
+      padding: 2px 6px; border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.5);
+      font-size: 10px; color: var(--muted);
     }
+    .badge.win { border-color: #22c55e; color: #bbf7d0; background: rgba(22,163,74,0.2); }
+    .badge.loss { border-color: #ef4444; color: #fecaca; background: rgba(120,29,29,0.35); }
 
-    .badge.win {
-      border-color: rgba(34, 197, 94, 0.85);
-      color: #bbf7d0;
-      background: rgba(22, 163, 74, 0.2);
-    }
+    .badge.type { border-style: dashed; }
 
-    .badge.loss {
-      border-color: rgba(248, 113, 113, 0.85);
-      color: #fecaca;
-      background: rgba(127, 29, 29, 0.35);
-    }
+    .score { font-weight: 600; font-size: 12px; }
+    .empty-state { padding: 16px 10px; text-align: center; color: var(--muted); }
 
-    .badge.type {
-      border-style: dashed;
-    }
-
-    .score {
-      font-weight: 600;
-      font-size: 12px;
-    }
-
-    .empty-state {
-      padding: 16px 10px;
-      font-size: 11px;
-      color: var(--muted);
-      text-align: center;
-    }
-
-    .footer-note {
-      margin-top: 10px;
-      font-size: 10px;
-      color: var(--muted);
-      text-align: right;
-    }
-
-    .footer-note span {
-      color: var(--accent);
-    }
-
-    .badge-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px;
-    }
-
-    .rr-block {
-      margin-top: 12px;
-      padding-top: 10px;
-      border-top: 1px dashed #1f2937;
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    .rr-title {
-      font-size: 11px;
-      font-weight: 600;
-      margin-bottom: 6px;
-      color: #e5e7eb;
-    }
-
-    .rr-list {
-      margin-top: 6px;
-      padding-left: 14px;
-    }
-
-    .rr-list li {
-      margin-bottom: 4px;
-    }
   </style>
 </head>
+
 <body>
   <div class="app-shell">
     <header>
@@ -456,28 +205,26 @@
         <div class="brand-icon">PB</div>
         <div>
           <div class="brand-text-title">PicklePulse</div>
-          <div class="brand-text-sub">Your pickleball stats & rating tracker</div>
+          <div class="brand-text-sub">Your pickleball stats & RR tracker</div>
         </div>
       </div>
-      <div class="tagline">
-        Log matches in seconds. Track wins, partners, and a DUPR-style rating over time.
-      </div>
+
+      <div class="tagline">Log matches fast. Auto RR mode. DUPR-style rating.</div>
     </header>
 
     <div class="grid">
-      <!-- LEFT: Match Form + RR -->
+          <!-- LEFT SIDE: MATCH FORM + ROUND ROBIN -->
       <section class="card">
         <div class="card-header">
           <div>
             <div class="card-title">Add Match</div>
-            <div class="card-subtitle">Just finished a game? Log it in under 15 seconds.</div>
+            <div class="card-subtitle">Fast logging for singles & doubles.</div>
           </div>
-          <div class="pill">
-            <span>🏓</span> Live on this device
-          </div>
+          <div class="pill"><span>🏓</span> Local Save</div>
         </div>
 
         <form id="match-form">
+          <!-- FORMAT -->
           <div class="field">
             <label for="playMode">Format</label>
             <select id="playMode">
@@ -486,11 +233,13 @@
             </select>
           </div>
 
+          <!-- DATE -->
           <div class="field">
             <label for="date">Date</label>
             <input id="date" type="date" />
           </div>
 
+          <!-- PLAYERS -->
           <div class="field">
             <label for="player1">Player 1</label>
             <input id="player1" type="text" placeholder="e.g. Neil" required />
@@ -511,6 +260,7 @@
             <input id="player4" type="text" placeholder="Opponent 2 (doubles)" />
           </div>
 
+          <!-- SCORE -->
           <div class="field field-full">
             <label>Score (Your side vs Opponents)</label>
             <div class="score-inputs">
@@ -518,18 +268,22 @@
               <span>–</span>
               <input id="scoreThem" type="number" min="0" max="21" placeholder="7" />
             </div>
+
+            <!-- RESULT TOGGLES -->
             <div class="chips-row">
               <button type="button" class="chip-toggle active" data-win-state="auto">
-                Auto win/loss from score
+                Auto win/loss
               </button>
               <button type="button" class="chip-toggle" data-win-state="win">Force Win</button>
               <button type="button" class="chip-toggle" data-win-state="loss">Force Loss</button>
+
               <button type="button" class="chip-toggle" id="roundRobinToggle">
                 Round robin: OFF
               </button>
             </div>
           </div>
 
+          <!-- MATCH TYPE -->
           <div class="field">
             <label for="matchType">Match Type</label>
             <select id="matchType">
@@ -548,598 +302,562 @@
 
           <div class="field field-full">
             <label for="notes">Quick Notes (optional)</label>
-            <textarea id="notes" placeholder="e.g. Struggled on backhand dinks, strong drives from left side."></textarea>
+            <textarea id="notes" placeholder="e.g. Backhand dinks strong today."></textarea>
           </div>
 
+          <!-- BUTTONS -->
           <div class="btn-row field-full">
-            <button type="submit" class="btn-primary">
-              + Save Match
-            </button>
-            <button type="button" id="clearAll" class="btn-ghost danger">
-              Clear All
-            </button>
+            <button type="submit" class="btn-primary">+ Save Match</button>
+            <button type="button" id="clearAll" class="btn-ghost danger">Clear All</button>
           </div>
         </form>
 
+        <!-- ROUND ROBIN GENERATOR -->
         <div class="rr-block">
           <div class="rr-title">Round Robin Generator</div>
-          <div>
-            Use the 4 player slots above, choose Singles or Doubles, then:
-          </div>
-          <div class="btn-row" style="margin-top:8px;">
+          <div>Enter 4 players above. Choose format. Then:</div>
+
+          <div class="btn-row" style="margin-top: 8px;">
             <button type="button" id="generateRR" class="btn-ghost secondary">
-              Generate RR schedule
+              Generate RR Schedule
             </button>
           </div>
-          <div id="rrScheduleView" class="rr-view">
+
+          <div class="rr-view">
             <ul id="rrList" class="rr-list"></ul>
           </div>
         </div>
       </section>
-
-      <!-- RIGHT: Stats & Matches -->
+            <!-- RIGHT SIDE: STATS + MATCH LIST -->
       <section class="card">
         <div class="card-header">
           <div>
-            <div class="card-title">Your Numbers</div>
-            <div class="card-subtitle">See your trend, not just today’s game.</div>
+            <div class="card-title">Your Stats</div>
+            <div class="card-subtitle">Wins, streaks, rating & history.</div>
           </div>
-          <div class="pill">
-            <span>📈</span> Live stats
+          <div class="pill" id="ratingPill">Rating: 3.50</div>
+        </div>
+
+        <!-- QUICK STATS -->
+        <div class="stats-grid" style="
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 12px;
+          margin-bottom: 14px;
+        ">
+          <div class="card-mini" style="
+            background: #020617;
+            border-radius: 16px;
+            padding: 12px;
+            border: 1px solid #1f2937;
+          ">
+            <div style="font-size: 11px; color: var(--muted);">Total Matches</div>
+            <div id="statTotal" style="font-weight: 700; margin-top: 4px;">0</div>
+          </div>
+
+          <div class="card-mini" style="
+            background: #020617;
+            border-radius: 16px;
+            padding: 12px;
+            border: 1px solid #1f2937;
+          ">
+            <div style="font-size: 11px; color: var(--muted);">Win %</div>
+            <div id="statWinPct" style="font-weight: 700; margin-top: 4px;">0%</div>
+          </div>
+
+          <div class="card-mini" style="
+            background: #020617;
+            border-radius: 16px;
+            padding: 12px;
+            border: 1px solid #1f2937;
+          ">
+            <div style="font-size: 11px; color: var(--muted);">Wins</div>
+            <div id="statWins" style="font-weight: 700; margin-top: 4px;">0</div>
+          </div>
+
+          <div class="card-mini" style="
+            background: #020617;
+            border-radius: 16px;
+            padding: 12px;
+            border: 1px solid #1f2937;
+          ">
+            <div style="font-size: 11px; color: var(--muted);">Losses</div>
+            <div id="statLosses" style="font-weight: 700; margin-top: 4px;">0</div>
+          </div>
+
+          <div class="card-mini" style="
+            background: #020617;
+            border-radius: 16px;
+            padding: 12px;
+            border: 1px solid #1f2937;
+          ">
+            <div style="font-size: 11px; color: var(--muted);">Streak</div>
+            <div id="statStreak" style="font-weight: 700; margin-top: 4px;">0</div>
+          </div>
+
+          <div class="card-mini" style="
+            background: #020617;
+            border-radius: 16px;
+            padding: 12px;
+            border: 1px solid #1f2937;
+          ">
+            <div style="font-size: 11px; color: var(--muted);">Best Partner</div>
+            <div id="statPartner" style="font-weight: 700; margin-top: 4px;">–</div>
           </div>
         </div>
 
-        <div class="stats-grid">
-          <div class="stat-card rating-card">
-            <div class="stat-label">Estimated Rating</div>
-            <div class="stat-value" id="rating">–</div>
-            <div class="stat-tag" id="ratingTag">New Player</div>
-            <div class="stat-sub" id="ratingSub">
-              Starts at 3.00 and adjusts slightly per match (this is not official DUPR).
-            </div>
-          </div>
+        <!-- RESET BUTTON -->
+        <button id="resetStats" class="btn-ghost danger" style="width: 100%; margin-bottom: 12px;">
+          Reset All Data
+        </button>
 
-          <div class="stat-card">
-            <div class="stat-label">Record</div>
-            <div class="stat-value" id="record">0–0</div>
-            <div class="stat-sub" id="recordSub">0.0% win rate</div>
-          </div>
-
-          <div class="stat-card">
-            <div class="stat-label">Most Played Partner</div>
-            <div class="stat-value" id="topPartner">–</div>
-            <div class="stat-sub" id="topPartnerSub">No data yet</div>
-          </div>
-        </div>
-
-        <div class="matches" id="matchesContainer">
+        <!-- MATCH HISTORY TABLE -->
+        <div class="matches">
           <div class="match-row header">
             <div>Match</div>
-            <div>Type</div>
             <div>Score</div>
             <div>Result</div>
+            <div>Date</div>
           </div>
-          <div class="empty-state" id="emptyState">
-            No matches logged yet. Play a game, then add your first result on the left.
+          <div id="matchList">
+            <div class="empty-state">No matches yet — log one!</div>
           </div>
-        </div>
-
-        <div class="footer-note">
-          Stored locally in your browser. <span>Future version</span> could sync to the cloud
-          via Pipedream & Google Sheets.
         </div>
       </section>
-    </div>
-  </div>
+    </div> <!-- end grid -->
+    <script>
+/* ============================================================
+   ROUND ROBIN ENGINE — Generator + Autofill + Auto-Advance
+   ============================================================ */
 
-  <script>
-    const STORAGE_KEY = "pickle_pulse_matches_v1";
-    const RR_STORAGE_KEY = "pickle_pulse_rr_schedule_v1";
+let rrSchedule = null;    // full schedule of matches
+let rrIndex = 0;          // current match pointer
+let rrActive = false;     // RR ON/OFF state
+let rrFormatLocked = null; // "singles" or "doubles" — locked during RR
 
-    function loadMatches() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        return raw ? JSON.parse(raw) : [];
-      } catch (e) {
-        console.error("Failed to parse storage", e);
-        return [];
-      }
+// Load RR state from localStorage
+function loadRRState() {
+  const saved = localStorage.getItem("rrState");
+  if (!saved) return;
+
+  const state = JSON.parse(saved);
+  rrSchedule = state.schedule;
+  rrIndex = state.index;
+  rrActive = state.active;
+  rrFormatLocked = state.format;
+
+  if (rrActive && rrSchedule) {
+    // display RR schedule
+    renderRRList();
+    document.getElementById("roundRobinToggle").classList.add("active");
+    document.getElementById("roundRobinToggle").textContent = "Round robin: ON";
+
+    // lock format dropdown
+    if (rrFormatLocked) {
+      const mode = document.getElementById("playMode");
+      mode.value = rrFormatLocked;
+      mode.disabled = true;
     }
+  }
+}
 
-    function saveMatches(matches) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(matches));
-    }
+// Save RR state
+function saveRRState() {
+  localStorage.setItem("rrState", JSON.stringify({
+    schedule: rrSchedule,
+    index: rrIndex,
+    active: rrActive,
+    format: rrFormatLocked
+  }));
+}
 
-    function loadRRSchedule() {
-      try {
-        const raw = localStorage.getItem(RR_STORAGE_KEY);
-        return raw ? JSON.parse(raw) : null;
-      } catch (e) {
-        console.error("Failed to parse RR schedule", e);
-        return null;
-      }
-    }
+// Clear RR state
+function clearRRState() {
+  rrSchedule = null;
+  rrIndex = 0;
+  rrActive = false;
+  rrFormatLocked = null;
+  localStorage.removeItem("rrState");
 
-    function saveRRSchedule(schedule) {
-      localStorage.setItem(RR_STORAGE_KEY, JSON.stringify(schedule));
-    }
+  document.getElementById("rrList").innerHTML = "";
+  const t = document.getElementById("roundRobinToggle");
+  t.classList.remove("active");
+  t.textContent = "Round robin: OFF";
 
-    const form = document.getElementById("match-form");
-    const clearAllBtn = document.getElementById("clearAll");
-    const matchesContainer = document.getElementById("matchesContainer");
-    const emptyState = document.getElementById("emptyState");
-    const ratingEl = document.getElementById("rating");
-    const ratingTagEl = document.getElementById("ratingTag");
-    const ratingSubEl = document.getElementById("ratingSub");
-    const recordEl = document.getElementById("record");
-    const recordSubEl = document.getElementById("recordSub");
-    const topPartnerEl = document.getElementById("topPartner");
-    const topPartnerSubEl = document.getElementById("topPartnerSub");
-    const chipToggles = Array.from(document.querySelectorAll(".chip-toggle"));
-    const playModeSelect = document.getElementById("playMode");
-    const roundRobinToggle = document.getElementById("roundRobinToggle");
-    const rrListEl = document.getElementById("rrList");
-    const generateRRBtn = document.getElementById("generateRR");
+  const mode = document.getElementById("playMode");
+  mode.disabled = false;
+}
 
-    const player1Input = document.getElementById("player1");
-    const player2Input = document.getElementById("player2");
-    const player3Input = document.getElementById("player3");
-    const player4Input = document.getElementById("player4");
+// ---------- Generate Round Robin ----------
+function generateRoundRobin(players, mode) {
+  const matches = [];
 
-    let matches = loadMatches();
-    let winStateMode = "auto";
-    let roundRobinOn = false;
-    let rrSchedule = loadRRSchedule();
-
-    // Win/Loss mode chips (not RR chip)
-    chipToggles.forEach((chip) => {
-      if (chip === roundRobinToggle) return;
-      chip.addEventListener("click", () => {
-        const mode = chip.getAttribute("data-win-state");
-        winStateMode = mode;
-        chipToggles.forEach((c) => {
-          if (c !== roundRobinToggle) c.classList.remove("active");
+  if (mode === "singles") {
+    // Singles: 4 players → 6 matches
+    for (let i = 0; i < players.length; i++) {
+      for (let j = i + 1; j < players.length; j++) {
+        matches.push({
+          type: "singles",
+          p1: players[i],
+          p2: players[j],
         });
-        chip.classList.add("active");
-      });
+      }
+    }
+  } else {
+    // Doubles — fixed partner pairs, 2 teams
+    matches.push({
+      type: "doubles",
+      team1: [players[0], players[1]],
+      team2: [players[2], players[3]],
     });
 
-    // Round robin toggle (per match)
-    roundRobinToggle.addEventListener("click", () => {
-      roundRobinOn = !roundRobinOn;
-      roundRobinToggle.classList.toggle("active", roundRobinOn);
-      roundRobinToggle.textContent = roundRobinOn
-        ? "Round robin: ON"
-        : "Round robin: OFF";
+    matches.push({
+      type: "doubles",
+      team1: [players[0], players[2]],
+      team2: [players[1], players[3]],
     });
 
-    // Singles vs Doubles UI
-    function updatePlayModeUI() {
-      const mode = playModeSelect.value;
-      if (mode === "singles") {
-        player2Input.value = "";
-        player4Input.value = "";
-        player2Input.disabled = true;
-        player4Input.disabled = true;
-        player2Input.placeholder = "N/A in singles";
-        player4Input.placeholder = "N/A in singles";
-      } else {
-        player2Input.disabled = false;
-        player4Input.disabled = false;
-        player2Input.placeholder = "Partner (doubles)";
-        player4Input.placeholder = "Opponent 2 (doubles)";
-      }
-    }
-
-    playModeSelect.addEventListener("change", updatePlayModeUI);
-
-    function deriveWinFromScore(us, them) {
-      if (us == null || them == null || isNaN(us) || isNaN(them)) return null;
-      if (us === them) return null;
-      return us > them;
-    }
-
-    function formatDateLabel(iso) {
-      if (!iso) return "No date";
-      const d = new Date(iso);
-      if (Number.isNaN(d.getTime())) return "No date";
-      return d.toLocaleDateString(undefined, {
-        month: "short",
-        day: "numeric",
-      });
-    }
-
-    function computeStats(matches) {
-      const total = matches.length;
-      if (!total) {
-        return {
-          wins: 0,
-          losses: 0,
-          winPct: 0,
-          rating: null,
-          topPartner: null,
-          topPartnerRecord: null,
-        };
-      }
-
-      let wins = 0;
-      let losses = 0;
-      const partnerStats = {};
-
-      for (const m of matches) {
-        if (m.result === "win") wins++;
-        else if (m.result === "loss") losses++;
-
-        const p =
-          (m.format === "doubles" && m.player2 && m.player2.trim()) ||
-          (m.partner || "").trim();
-        if (p) {
-          if (!partnerStats[p]) {
-            partnerStats[p] = { wins: 0, losses: 0, count: 0 };
-          }
-          partnerStats[p].count++;
-          if (m.result === "win") partnerStats[p].wins++;
-          else if (m.result === "loss") partnerStats[p].losses++;
-        }
-      }
-
-      const winPct = total > 0 ? (wins / total) * 100 : 0;
-
-      let rating = 3.0;
-      for (const m of matches) {
-        if (m.result === "win") {
-          let delta = 0.03;
-          if (m.scoreUs >= 11 && m.scoreThem <= 4) delta += 0.01;
-          rating += delta;
-        } else if (m.result === "loss") {
-          let delta = -0.02;
-          if (m.scoreThem >= 11 && m.scoreUs <= 4) delta -= 0.01;
-          rating += delta;
-        }
-      }
-      rating = Math.max(2.5, Math.min(5.5, rating));
-
-      let topPartner = null;
-      let topPartnerRecord = null;
-
-      Object.entries(partnerStats).forEach(([name, stats]) => {
-        if (!topPartner || stats.count > topPartner.count) {
-          topPartner = { name, ...stats };
-        }
-      });
-
-      if (topPartner) {
-        topPartnerRecord = `${topPartner.wins}-${topPartner.losses}`;
-      }
-
-      return { wins, losses, winPct, rating, topPartner, topPartnerRecord };
-    }
-
-    function ratingTag(rating) {
-      if (rating == null)
-        return { tag: "New Player", sub: "Log a few matches to see your trend." };
-      if (rating < 3.2)
-        return {
-          tag: "Building Foundation",
-          sub: "Work on consistent dinks & serves. You're stacking experience.",
-        };
-      if (rating < 3.6)
-        return {
-          tag: "Solid Rec Player",
-          sub: "You're gaining control. Focus on third-shot drops & soft game.",
-        };
-      if (rating < 4.0)
-        return {
-          tag: "Competitive",
-          sub: "You can hang with strong players. Target weaknesses from your notes.",
-        };
-      if (rating < 4.5)
-        return {
-          tag: "Advanced",
-          sub: "You likely dominate rec. Seek higher-level games and structured drilling.",
-        };
-      return {
-        tag: "Elite",
-        sub: "Your stats look legit. Use this tracker to prep for tournaments.",
-      };
-    }
-
-    function buildMatchTitle(m) {
-      const p1 = m.player1 || "Player 1";
-      const p2 = m.player2 || "";
-      const p3 = m.player3 || "Player 3";
-      const p4 = m.player4 || "";
-
-      if (m.format === "singles") {
-        return `${p1} vs ${p3}`;
-      } else {
-        const left = [p1, p2].filter(Boolean).join(" & ") || "Team 1";
-        const right = [p3, p4].filter(Boolean).join(" & ") || "Team 2";
-        return `${left} vs ${right}`;
-      }
-    }
-
-    function renderRRSchedule() {
-      rrListEl.innerHTML = "";
-      if (!rrSchedule || !rrSchedule.matches || !rrSchedule.matches.length) {
-        const li = document.createElement("li");
-        li.textContent = "No round robin schedule yet. Enter 4 players and tap Generate.";
-        rrListEl.appendChild(li);
-        return;
-      }
-
-      rrSchedule.matches.forEach((m, idx) => {
-        const li = document.createElement("li");
-        li.textContent = `${idx + 1}. ${m.label}`;
-        rrListEl.appendChild(li);
-      });
-    }
-
-    function render() {
-      const { wins, losses, winPct, rating, topPartner, topPartnerRecord } =
-        computeStats(matches);
-
-      ratingEl.textContent = rating == null ? "–" : rating.toFixed(2);
-
-      const tagInfo = ratingTag(rating);
-      ratingTagEl.textContent = tagInfo.tag;
-      ratingSubEl.textContent = tagInfo.sub;
-
-      recordEl.textContent = `${wins}-${losses}`;
-      recordSubEl.textContent = `${winPct.toFixed(1)}% win rate`;
-
-      if (topPartner) {
-        topPartnerEl.textContent = topPartner.name;
-        topPartnerSubEl.textContent = `${topPartnerRecord} with this partner`;
-      } else {
-        topPartnerEl.textContent = "–";
-        topPartnerSubEl.textContent = "No data yet";
-      }
-
-      const existingRows = Array.from(
-        matchesContainer.querySelectorAll(".match-row.data-row")
-      );
-      existingRows.forEach((r) => r.remove());
-
-      if (!matches.length) {
-        emptyState.style.display = "block";
-      } else {
-        emptyState.style.display = "none";
-      }
-
-      matches
-        .slice()
-        .reverse()
-        .forEach((m) => {
-          const row = document.createElement("div");
-          row.className = "match-row data-row";
-
-          const main = document.createElement("div");
-          main.className = "match-main";
-          const title = document.createElement("div");
-          title.className = "match-title";
-          title.textContent = buildMatchTitle(m);
-          const meta = document.createElement("div");
-          meta.className = "match-meta";
-          meta.textContent = `${formatDateLabel(m.date)} • ${
-            m.location || "Unknown court"
-          }`;
-          main.appendChild(title);
-          main.appendChild(meta);
-
-          const typeCell = document.createElement("div");
-          const badges = document.createElement("div");
-          badges.className = "badge-row";
-
-          const typeBadge = document.createElement("span");
-          typeBadge.className = "badge type";
-          typeBadge.textContent = m.matchTypeLabel || "Rec";
-          badges.appendChild(typeBadge);
-
-          const formatBadge = document.createElement("span");
-          formatBadge.className = "badge";
-          formatBadge.textContent =
-            m.format === "singles" ? "Singles" : "Doubles";
-          badges.appendChild(formatBadge);
-
-          if (m.roundRobin) {
-            const rrBadge = document.createElement("span");
-            rrBadge.className = "badge";
-            rrBadge.textContent = "RR";
-            badges.appendChild(rrBadge);
-          }
-
-          typeCell.appendChild(badges);
-
-          const scoreCell = document.createElement("div");
-          scoreCell.className = "score";
-          scoreCell.textContent =
-            m.scoreUs != null && m.scoreThem != null
-              ? `${m.scoreUs}-${m.scoreThem}`
-              : "–";
-
-          const resultCell = document.createElement("div");
-          const resultBadge = document.createElement("span");
-          resultBadge.className = "badge";
-          if (m.result === "win") {
-            resultBadge.classList.add("win");
-            resultBadge.textContent = "Win";
-          } else if (m.result === "loss") {
-            resultBadge.classList.add("loss");
-            resultBadge.textContent = "Loss";
-          } else {
-            resultBadge.textContent = "—";
-          }
-          resultCell.appendChild(resultBadge);
-
-          row.appendChild(main);
-          row.appendChild(typeCell);
-          row.appendChild(scoreCell);
-          row.appendChild(resultCell);
-          matchesContainer.appendChild(row);
-        });
-
-      renderRRSchedule();
-    }
-
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const format = playModeSelect.value;
-      const player1 = player1Input.value.trim();
-      const player2 = player2Input.value.trim();
-      const player3 = player3Input.value.trim();
-      const player4 = player4Input.value.trim();
-
-      const scoreUsRaw = document.getElementById("scoreUs").value;
-      const scoreThemRaw = document.getElementById("scoreThem").value;
-      const matchType = document.getElementById("matchType").value;
-      const location = document.getElementById("location").value.trim();
-      const notes = document.getElementById("notes").value.trim();
-      const dateRaw = document.getElementById("date").value;
-
-      if (!player1 || !player3) {
-        alert("Please enter at least Player 1 and Player 3.");
-        return;
-      }
-
-      if (scoreUsRaw === "" || scoreThemRaw === "") {
-        alert("Please enter both scores (your side and opponents).");
-        return;
-      }
-
-      let scoreUs = Number(scoreUsRaw);
-      let scoreThem = Number(scoreThemRaw);
-
-      if (isNaN(scoreUs) || isNaN(scoreThem)) {
-        alert("Scores must be numbers.");
-        return;
-      }
-
-      let result = null;
-      if (winStateMode === "win") result = "win";
-      else if (winStateMode === "loss") result = "loss";
-      else {
-        const derived = deriveWinFromScore(scoreUs, scoreThem);
-        if (derived === true) result = "win";
-        else if (derived === false) result = "loss";
-        else result = null;
-      }
-
-      const matchTypeLabelMap = {
-        rec: "Rec",
-        ladder: "Ladder",
-        league: "League",
-        tournament: "Tournament",
-        drills: "Drills",
-      };
-
-      const payload = {
-        id: Date.now(),
-        playerName: player1, // legacy
-        partner: player2,
-        opponents: [player3, player4].filter(Boolean).join(" & "),
-        player1,
-        player2: format === "doubles" ? player2 : "",
-        player3,
-        player4: format === "doubles" ? player4 : "",
-        format,
-        roundRobin: roundRobinOn,
-        scoreUs,
-        scoreThem,
-        result,
-        matchType,
-        matchTypeLabel: matchTypeLabelMap[matchType] || "Rec",
-        location,
-        notes,
-        date: dateRaw || new Date().toISOString(),
-        createdAt: new Date().toISOString(),
-      };
-
-      matches.push(payload);
-      saveMatches(matches);
-      render();
-
-      document.getElementById("scoreUs").value = "";
-      document.getElementById("scoreThem").value = "";
-      document.getElementById("notes").value = "";
-      document.getElementById("location").value = "";
+    matches.push({
+      type: "doubles",
+      team1: [players[0], players[3]],
+      team2: [players[1], players[2]],
     });
+  }
 
-    clearAllBtn.addEventListener("click", () => {
-      if (!matches.length) return;
-      const yes = confirm(
-        "Clear all matches from this device? This cannot be undone."
-      );
-      if (!yes) return;
-      matches = [];
-      saveMatches(matches);
-      render();
-    });
+  return matches;
+}
 
-    generateRRBtn.addEventListener("click", () => {
-      const mode = playModeSelect.value;
-      const p1 = player1Input.value.trim();
-      const p2 = player2Input.value.trim();
-      const p3 = player3Input.value.trim();
-      const p4 = player4Input.value.trim();
+// ----- Render RR list -----
+function renderRRList() {
+  const ul = document.getElementById("rrList");
+  ul.innerHTML = "";
 
-      if (!p1 || !p2 || !p3 || !p4) {
-        alert("For round robin, please enter all 4 player names.");
-        return;
-      }
+  if (!rrSchedule) return;
 
-      let matchesList = [];
+  rrSchedule.forEach((m, idx) => {
+    let text = "";
 
-      if (mode === "doubles") {
-        // Standard 4-player doubles RR
-        matchesList = [
-          { label: `${p1} & ${p2} vs ${p3} & ${p4}` },
-          { label: `${p1} & ${p3} vs ${p2} & ${p4}` },
-          { label: `${p1} & ${p4} vs ${p2} & ${p3}` },
-        ];
-      } else {
-        // Singles: all 1v1 pairings among 4 players
-        const singlesPairs = [
-          [p1, p2],
-          [p1, p3],
-          [p1, p4],
-          [p2, p3],
-          [p2, p4],
-          [p3, p4],
-        ];
-
-        // Shuffle pairs for randomness
-        for (let i = singlesPairs.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [singlesPairs[i], singlesPairs[j]] = [singlesPairs[j], singlesPairs[i]];
-        }
-
-        matchesList = singlesPairs.map(([a, b]) => ({
-          label: `${a} vs ${b}`,
-        }));
-      }
-
-      rrSchedule = {
-        mode,
-        createdAt: new Date().toISOString(),
-        matches: matchesList,
-      };
-      saveRRSchedule(rrSchedule);
-      renderRRSchedule();
-    });
-
-    // Prefill date & mode UI
-    const dateInput = document.getElementById("date");
-    if (dateInput && !dateInput.value) {
-      const today = new Date();
-      const yyyy = today.getFullYear();
-      const mm = String(today.getMonth() + 1).padStart(2, "0");
-      const dd = String(today.getDate()).padStart(2, "0");
-      dateInput.value = `${yyyy}-${mm}-${dd}`;
+    if (m.type === "singles") {
+      text = `${m.p1} vs ${m.p2}`;
+    } else {
+      text = `${m.team1[0]} & ${m.team1[1]} vs ${m.team2[0]} & ${m.team2[1]}`;
     }
 
-    updatePlayModeUI();
-    render();
-  </script>
+    const li = document.createElement("li");
+    li.textContent = (idx === rrIndex ? "👉 " : "") + text;
+    ul.appendChild(li);
+  });
+}
+
+// ----- Autofill the Next RR Match into the Form -----
+function autofillNextRRMatch() {
+  if (!rrActive || !rrSchedule || rrIndex >= rrSchedule.length) return;
+
+  const match = rrSchedule[rrIndex];
+  const modeEl = document.getElementById("playMode");
+
+  // LOCK format
+  if (match.type === "singles") {
+    modeEl.value = "singles";
+    modeEl.disabled = true;
+  } else {
+    modeEl.value = "doubles";
+    modeEl.disabled = true;
+  }
+
+  rrFormatLocked = match.type;
+  saveRRState();
+
+  // ---- FILL PLAYERS ----
+  if (match.type === "singles") {
+    document.getElementById("player1").value = match.p1;
+    document.getElementById("player2").value = "";
+    document.getElementById("player3").value = match.p2;
+    document.getElementById("player4").value = "";
+  } else {
+    document.getElementById("player1").value = match.team1[0];
+    document.getElementById("player2").value = match.team1[1];
+    document.getElementById("player3").value = match.team2[0];
+    document.getElementById("player4").value = match.team2[1];
+  }
+
+  // clear score & notes
+  document.getElementById("scoreUs").value = "";
+  document.getElementById("scoreThem").value = "";
+  document.getElementById("notes").value = "";
+
+  // ensure RR toggle looks ON
+  const toggle = document.getElementById("roundRobinToggle");
+  toggle.classList.add("active");
+  toggle.textContent = "Round robin: ON";
+
+  renderRRList();
+}
+
+// ----- Advance RR to next match -----
+function advanceRR() {
+  rrIndex++;
+
+  // Completed all matches?
+  if (rrIndex >= rrSchedule.length) {
+    alert("🎉 Round Robin Complete — All matches played!");
+    clearRRState();
+    return;
+  }
+
+  saveRRState();
+  autofillNextRRMatch();
+}
+
+// ============================================================
+// RR BUTTON CLICK
+// ============================================================
+document.getElementById("generateRR").addEventListener("click", () => {
+  const mode = document.getElementById("playMode").value;
+
+  // Gather players
+  const p1 = document.getElementById("player1").value.trim();
+  const p2 = document.getElementById("player2").value.trim();
+  const p3 = document.getElementById("player3").value.trim();
+  const p4 = document.getElementById("player4").value.trim();
+
+  if (mode === "singles" && (!p1 || !p2 || !p3 || !p4)) {
+    alert("Enter 4 player names for singles RR.");
+    return;
+  }
+
+  if (mode === "doubles" && (!p1 || !p2 || !p3 || !p4)) {
+    alert("Enter all 4 players for doubles RR.");
+    return;
+  }
+
+  const players = [p1, p2, p3, p4];
+
+  rrSchedule = generateRoundRobin(players, mode);
+  rrIndex = 0;
+  rrActive = true;
+  rrFormatLocked = mode;
+
+  saveRRState();
+  renderRRList();
+  autofillNextRRMatch();
+});
+
+// ============================================================
+// RR TOGGLE BUTTON (manual ON/OFF)
+// ============================================================
+document.getElementById("roundRobinToggle").addEventListener("click", () => {
+  if (rrActive) {
+    // Turn OFF
+    clearRRState();
+  } else {
+    // Turn ON (manual mode)
+    rrActive = true;
+    document.getElementById("roundRobinToggle").classList.add("active");
+    document.getElementById("roundRobinToggle").textContent = "Round robin: ON";
+    saveRRState();
+  }
+});
+
+// Load existing RR session (if any)
+loadRRState();
+</script>
+<script>
+/* ============================================================
+   MATCH STORAGE + STATS + RENDERING
+   ============================================================ */
+
+let matches = JSON.parse(localStorage.getItem("matches") || "[]");
+
+// --------- Save matches back to localStorage ----------
+function saveMatches() {
+  localStorage.setItem("matches", JSON.stringify(matches));
+}
+
+// --------- Simple DUPR-style rating calculation ----------
+function calculateRating() {
+  if (matches.length === 0) return "3.50";
+
+  let rating = 3.5;
+
+  matches.forEach(m => {
+    const diff = m.scoreUs - m.scoreThem;
+
+    if (m.result === "win") {
+      rating += 0.01 + diff * 0.001;
+    } else {
+      rating -= 0.01 + Math.abs(diff) * 0.001;
+    }
+  });
+
+  if (rating < 2.0) rating = 2.0;
+  if (rating > 6.5) rating = 6.5;
+
+  return rating.toFixed(2);
+}
+
+// --------- Calculate stats ----------
+function updateStats() {
+  const total = matches.length;
+  const wins = matches.filter(m => m.result === "win").length;
+  const losses = total - wins;
+
+  const winPct = total ? Math.round((wins / total) * 100) + "%" : "0%";
+
+  // streak calculation
+  let streak = 0;
+  for (let i = matches.length - 1; i >= 0; i--) {
+    if (matches[i].result === "win") streak++;
+    else break;
+  }
+
+  // best partner
+  const partnerCounts = {};
+  matches.forEach(m => {
+    if (m.partner && m.result === "win") {
+      partnerCounts[m.partner] = (partnerCounts[m.partner] || 0) + 1;
+    }
+  });
+
+  let bestPartner = "–";
+  if (Object.keys(partnerCounts).length) {
+    bestPartner = Object.entries(partnerCounts).sort((a, b) => b[1] - a[1])[0][0];
+  }
+
+  document.getElementById("statTotal").textContent = total;
+  document.getElementById("statWins").textContent = wins;
+  document.getElementById("statLosses").textContent = losses;
+  document.getElementById("statWinPct").textContent = winPct;
+  document.getElementById("statStreak").textContent = streak;
+  document.getElementById("statPartner").textContent = bestPartner;
+
+  const rating = calculateRating();
+  document.getElementById("ratingPill").textContent = "Rating: " + rating;
+}
+
+// --------- Render match list ----------
+function renderMatches() {
+  const list = document.getElementById("matchList");
+  list.innerHTML = "";
+
+  if (matches.length === 0) {
+    list.innerHTML = `<div class="empty-state">No matches yet — log one!</div>`;
+    return;
+  }
+
+  matches.slice().reverse().forEach(m => {
+    const row = document.createElement("div");
+    row.className = "match-row";
+
+    const players = m.mode === "singles"
+      ? `${m.p1} vs ${m.p3}`
+      : `${m.p1} & ${m.p2} vs ${m.p3} & ${m.p4}`;
+
+    row.innerHTML = `
+      <div class="match-main">
+        <div class="match-title">${players}</div>
+        <div class="match-meta">${m.type} • ${m.location || "No location"}</div>
+      </div>
+
+      <div class="score">${m.scoreUs} – ${m.scoreThem}</div>
+
+      <div>
+        <span class="badge ${m.result === "win" ? "win" : "loss"}">
+          ${m.result}
+        </span>
+      </div>
+
+      <div>${m.date}</div>
+    `;
+
+    list.appendChild(row);
+  });
+}
+
+// ============================================================
+// MATCH FORM SUBMIT (Handles Round Robin auto-advance)
+// ============================================================
+document.getElementById("match-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const mode = document.getElementById("playMode").value;
+
+  const p1 = document.getElementById("player1").value.trim();
+  const p2 = document.getElementById("player2").value.trim();
+  const p3 = document.getElementById("player3").value.trim();
+  const p4 = document.getElementById("player4").value.trim();
+
+  const scoreUs = parseInt(document.getElementById("scoreUs").value);
+  const scoreThem = parseInt(document.getElementById("scoreThem").value);
+  const date = document.getElementById("date").value || new Date().toISOString().slice(0, 10);
+  const type = document.getElementById("matchType").value;
+  const location = document.getElementById("location").value.trim();
+  const notes = document.getElementById("notes").value.trim();
+
+  if (isNaN(scoreUs) || isNaN(scoreThem)) {
+    alert("Score is required.");
+    return;
+  }
+
+  // auto win/loss
+  let result = scoreUs > scoreThem ? "win" : "loss";
+
+  matches.push({
+    mode,
+    type,
+    p1, p2, p3, p4,
+    scoreUs, scoreThem,
+    result,
+    partner: mode === "doubles" ? p2 : null,
+    location,
+    notes,
+    date
+  });
+
+  saveMatches();
+  updateStats();
+  renderMatches();
+
+  // If RR is active → advance RR
+  if (rrActive) {
+    advanceRR();
+  }
+});
+
+// ============================================================
+// CLEAR ALL BUTTON
+// ============================================================
+document.getElementById("clearAll").addEventListener("click", () => {
+  if (confirm("Clear all form fields?")) {
+    document.getElementById("player1").value = "";
+    document.getElementById("player2").value = "";
+    document.getElementById("player3").value = "";
+    document.getElementById("player4").value = "";
+    document.getElementById("scoreUs").value = "";
+    document.getElementById("scoreThem").value = "";
+    document.getElementById("location").value = "";
+    document.getElementById("notes").value = "";
+  }
+});
+
+// ============================================================
+// RESET ALL DATA
+// ============================================================
+document.getElementById("resetStats").addEventListener("click", () => {
+  if (!confirm("Delete ALL match data? This cannot be undone.")) return;
+
+  matches = [];
+  saveMatches();
+  updateStats();
+  renderMatches();
+  clearRRState();
+});
+
+// Initialize on load
+updateStats();
+renderMatches();
+
+</script>
+
 </body>
 </html>
