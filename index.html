@@ -157,7 +157,6 @@
 
     .rr-list { margin-top: 6px; padding-left: 14px; }
     .rr-list li { margin-bottom: 4px; }
-
   </style>
 </head>
 
@@ -172,7 +171,7 @@
         </div>
       </div>
 
-      <div class="tagline">Log matches fast. Auto RR mode. DUPR-style rating.</div>
+      <div class="tagline">Log matches fast. Auto RR mode. K-Factor rating.</div>
     </header>
 
     <div class="grid">
@@ -182,14 +181,13 @@
         <div class="card-header">
           <div>
             <div class="card-title">Add Match</div>
-            <div class="card-subtitle">Singles & doubles, fast logging.</div>
+            <div class="card-subtitle">Singles & doubles • K-factor rating</div>
           </div>
           <div class="pill"><span>🏓</span> Local Save</div>
         </div>
 
         <form id="match-form">
-
-          <!-- FORMAT -->
+                  <!-- FORMAT -->
           <div class="field">
             <label for="playMode">Format</label>
             <select id="playMode" onchange="updateFormatUI()">
@@ -211,18 +209,18 @@
           </div>
 
           <div class="field">
-            <label for="player2">Player 2 / Opponent (Singles)</label>
+            <label for="player2">Player 2 / Opponent</label>
             <input id="player2" type="text" placeholder="e.g. Matt" />
           </div>
 
           <div class="field" id="p3field">
-            <label for="player3">Player 3 (Opponent 1)</label>
-            <input id="player3" type="text" placeholder="Opponent 1" />
+            <label for="player3">Player 3</label>
+            <input id="player3" type="text" placeholder="Partner / Opponent" />
           </div>
 
           <div class="field" id="p4field">
-            <label for="player4">Player 4 (Opponent 2)</label>
-            <input id="player4" type="text" placeholder="Opponent 2" />
+            <label for="player4">Player 4</label>
+            <input id="player4" type="text" placeholder="Partner / Opponent" />
           </div>
 
           <!-- SCORE -->
@@ -242,7 +240,8 @@
               <button type="button" class="chip-toggle" id="roundRobinToggle">Round robin: OFF</button>
             </div>
           </div>
-                    <!-- MATCH TYPE -->
+
+          <!-- MATCH TYPE -->
           <div class="field">
             <label for="matchType">Match Type</label>
             <select id="matchType">
@@ -268,9 +267,10 @@
             <button type="submit" class="btn-primary">+ Save Match</button>
             <button type="button" id="clearAll" class="btn-ghost danger">Clear All</button>
           </div>
+
         </form>
 
-        <!-- ROUND ROBIN GENERATOR -->
+        <!-- ROUND ROBIN -->
         <div class="rr-block">
           <div class="rr-title">Round Robin Generator</div>
           <div>Enter 4 players. Choose format. Then generate RR.</div>
@@ -340,29 +340,22 @@
           Reset All Data
         </button>
 
-        <!-- MATCH HISTORY -->
-        <div class="matches">
-          <div class="match-row header">
-            <div>Match</div>
-            <div>Score</div>
-            <div>Result</div>
-            <div>Date</div>
-          </div>
-          <div id="matchList">
-            <div class="empty-state">No matches yet — log one!</div>
-          </div>
+        <!-- MATCH HISTORY (Premium UI comes in Chunk C) -->
+        <div class="matches" id="matchList">
+          <div class="empty-state">No matches yet — log one!</div>
         </div>
       </section>
-    </div> <!-- END GRID -->
+    </div>
 
-    <!-- ============================================================
-         ROUND ROBIN + MATCH ENGINE SCRIPT
-    ============================================================ -->
+<!-- ============================================================
+     SCRIPT SECTION — RR Engine + K-Factor Fundamentals
+============================================================ -->
+
 <script>
 
-/* -------------------------------------------------------------
-   SINGLES MODE UI: Hide Player 3 & Player 4 automatically
-------------------------------------------------------------- */
+/* ============================================================
+   SINGLES AUTO-HIDE
+============================================================ */
 function updateFormatUI() {
   const mode = document.getElementById("playMode").value;
   const p3 = document.getElementById("p3field");
@@ -379,10 +372,10 @@ function updateFormatUI() {
   }
 }
 
-updateFormatUI(); // call on load
+updateFormatUI();
 
 /* ============================================================
-   RR STATE
+   ROUND ROBIN STATE
 ============================================================ */
 let rrSchedule = null;
 let rrIndex = 0;
@@ -437,7 +430,7 @@ function clearRRState() {
 }
 
 /* ============================================================
-   RR MATCH GENERATION (Singles or Doubles)
+   GENERATE ROUND ROBIN MATCHES
 ============================================================ */
 function generateRoundRobin(players, mode) {
   const matches = [];
@@ -462,7 +455,7 @@ function generateRoundRobin(players, mode) {
 }
 
 /* ============================================================
-   RENDER RR LIST
+   RENDER ROUND ROBIN LIST
 ============================================================ */
 function renderRRList() {
   const ul = document.getElementById("rrList");
@@ -517,9 +510,9 @@ function autofillNextRRMatch() {
     updateFormatUI();
   }
 
-  document.getElementById("scoreUs").value = "";
-  document.getElementById("scoreThem").value = "";
-  document.getElementById("notes").value = "";
+  scoreUs.value = "";
+  scoreThem.value = "";
+  notes.value = "";
 
   const toggle = document.getElementById("roundRobinToggle");
   toggle.classList.add("active");
@@ -545,7 +538,7 @@ function advanceRR() {
 }
 
 /* ============================================================
-   GENERATE RR BUTTON
+   RR BUTTON
 ============================================================ */
 document.getElementById("generateRR").addEventListener("click", () => {
   const mode = document.getElementById("playMode").value;
@@ -573,7 +566,7 @@ document.getElementById("generateRR").addEventListener("click", () => {
 });
 
 /* ============================================================
-   RR TOGGLE BUTTON
+   RR TOGGLE
 ============================================================ */
 document.getElementById("roundRobinToggle").addEventListener("click", () => {
   if (rrActive) clearRRState();
@@ -587,30 +580,39 @@ document.getElementById("roundRobinToggle").addEventListener("click", () => {
 });
 
 /* ============================================================
-   MATCH STORAGE + STATS
+   MATCH STORAGE + K FACTOR ENGINE
 ============================================================ */
 let matches = JSON.parse(localStorage.getItem("matches") || "[]");
 
+// K factor setting (SINGLES & DOUBLES = 0.15 as chosen)
+const K_VALUE = 0.15;
+
+// Compute NEW rating using K-factor formula
+function computeRatingChange(scoreUs, scoreThem, result) {
+  const margin = scoreUs - scoreThem;
+  const marginFactor = margin / 11;
+
+  const baseChange = K_VALUE * marginFactor;
+  return result === "win" ? baseChange : -Math.abs(baseChange);
+}
+/* ============================================================
+   SAVE & UPDATE MATCH DATA
+============================================================ */
 function saveMatches() {
   localStorage.setItem("matches", JSON.stringify(matches));
 }
 
 function calculateRating() {
-  let rating = 3.5;
-
+  let rating = 3.5; // starting rating, fresh reset
   matches.forEach(m => {
-    const diff = m.scoreUs - m.scoreThem;
-
-    if (m.result === "win") rating += 0.01 + diff * 0.001;
-    else rating -= 0.01 + Math.abs(diff) * 0.001;
+    rating += m.ratingChange;
   });
-
-  if (rating < 2.0) rating = 2.0;
-  if (rating > 6.5) rating = 6.5;
-
-  return rating.toFixed(2);
+  return Math.max(2.0, Math.min(6.5, rating)).toFixed(2);
 }
 
+/* ============================================================
+   UPDATE STATS PANEL
+============================================================ */
 function updateStats() {
   const total = matches.length;
   const wins = matches.filter(m => m.result === "win").length;
@@ -646,45 +648,63 @@ function updateStats() {
 }
 
 /* ============================================================
-   RENDER MATCH HISTORY
+   PREMIUM MATCH HISTORY RENDERING
 ============================================================ */
 function renderMatches() {
-  matchList.innerHTML = "";
+  const list = document.getElementById("matchList");
+  list.innerHTML = "";
 
-  if (matches.length === 0) {
-    matchList.innerHTML = `<div class="empty-state">No matches yet — log one!</div>`;
+  if (!matches.length) {
+    list.innerHTML = `<div class="empty-state">No matches yet — log one!</div>`;
     return;
   }
 
   matches.slice().reverse().forEach(m => {
     const row = document.createElement("div");
-    row.className = "match-row";
+    row.className = "match-entry";
+
+    const badgeClass = m.result === "win" ? "badge-win" : "badge-loss";
+    const ratingChangeText = m.ratingChange > 0
+      ? `+${m.ratingChange.toFixed(3)}`
+      : m.ratingChange.toFixed(3);
 
     const players = m.mode === "singles"
       ? `${m.p1} vs ${m.p2}`
       : `${m.p1} & ${m.p2} vs ${m.p3} & ${m.p4}`;
 
     row.innerHTML = `
-      <div class="match-main">
-        <div class="match-title">${players}</div>
-        <div class="match-meta">${m.type} • ${m.location || "No location"}</div>
+      <div class="match-card">
+        <div class="match-header">
+          <div class="match-players">${players}</div>
+          <div class="match-type">${m.type}</div>
+        </div>
+
+        <div class="match-core">
+          <div class="score-block">
+            <span class="score">${m.scoreUs}</span>
+            <span class="dash">–</span>
+            <span class="score">${m.scoreThem}</span>
+          </div>
+
+          <div class="result-block ${badgeClass}">
+            <span>${m.result.toUpperCase()}</span>
+            <small>${ratingChangeText}</small>
+          </div>
+        </div>
+
+        <div class="match-footer">
+          <div class="date">${m.date}</div>
+          <div class="location">${m.location || "No location"}</div>
+        </div>
       </div>
-
-      <div class="score">${m.scoreUs} – ${m.scoreThem}</div>
-
-      <div>
-        <span class="badge ${m.result === "win" ? "win" : "loss"}">${m.result}</span>
-      </div>
-
-      <div>${m.date}</div>
     `;
 
-    matchList.appendChild(row);
+    list.appendChild(row);
   });
 }
 
 /* ============================================================
-   MATCH SUBMIT HANDLER
+   MATCH SUBMISSION
 ============================================================ */
 document.getElementById("match-form").addEventListener("submit", (e) => {
   e.preventDefault();
@@ -713,6 +733,10 @@ document.getElementById("match-form").addEventListener("submit", (e) => {
     players = { p1, p2, p3, p4 };
   }
 
+  const ratingBefore = parseFloat(calculateRating());
+  const ratingChange = computeRatingChange(scoreUsVal, scoreThemVal, result);
+  const ratingAfter = ratingBefore + ratingChange;
+
   matches.push({
     mode,
     type: matchType.value,
@@ -723,6 +747,9 @@ document.getElementById("match-form").addEventListener("submit", (e) => {
     partner: mode === "doubles" ? p2 : null,
     location: location.value.trim(),
     notes: notes.value.trim(),
+    ratingBefore,
+    ratingAfter,
+    ratingChange,
     date: date.value || new Date().toISOString().slice(0, 10)
   });
 
@@ -764,6 +791,9 @@ resetStats.addEventListener("click", () => {
   clearRRState();
 });
 
+/* ============================================================
+   INITIAL LOAD
+============================================================ */
 loadRRState();
 updateStats();
 renderMatches();
