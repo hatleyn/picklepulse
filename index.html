@@ -14,7 +14,6 @@
       --muted: #9ca3af;
       --danger: #ef4444;
       --border: #1f2937;
-      --radius-lg: 18px;
       --radius-xl: 24px;
     }
 
@@ -269,6 +268,10 @@
       color: #fecaca;
     }
 
+    .btn-ghost.secondary {
+      border-color: rgba(148, 163, 184, 0.6);
+    }
+
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -420,6 +423,30 @@
       flex-wrap: wrap;
       gap: 4px;
     }
+
+    .rr-block {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px dashed #1f2937;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .rr-title {
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #e5e7eb;
+    }
+
+    .rr-list {
+      margin-top: 6px;
+      padding-left: 14px;
+    }
+
+    .rr-list li {
+      margin-bottom: 4px;
+    }
   </style>
 </head>
 <body>
@@ -438,7 +465,7 @@
     </header>
 
     <div class="grid">
-      <!-- LEFT: Match Form -->
+      <!-- LEFT: Match Form + RR -->
       <section class="card">
         <div class="card-header">
           <div>
@@ -533,6 +560,21 @@
             </button>
           </div>
         </form>
+
+        <div class="rr-block">
+          <div class="rr-title">Round Robin Generator</div>
+          <div>
+            Use the 4 player slots above, choose Singles or Doubles, then:
+          </div>
+          <div class="btn-row" style="margin-top:8px;">
+            <button type="button" id="generateRR" class="btn-ghost secondary">
+              Generate RR schedule
+            </button>
+          </div>
+          <div id="rrScheduleView" class="rr-view">
+            <ul id="rrList" class="rr-list"></ul>
+          </div>
+        </div>
       </section>
 
       <!-- RIGHT: Stats & Matches -->
@@ -583,7 +625,7 @@
         </div>
 
         <div class="footer-note">
-          Stored locally in your browser. <span>Future version</span> will sync to the cloud
+          Stored locally in your browser. <span>Future version</span> could sync to the cloud
           via Pipedream & Google Sheets.
         </div>
       </section>
@@ -592,6 +634,7 @@
 
   <script>
     const STORAGE_KEY = "pickle_pulse_matches_v1";
+    const RR_STORAGE_KEY = "pickle_pulse_rr_schedule_v1";
 
     function loadMatches() {
       try {
@@ -605,6 +648,20 @@
 
     function saveMatches(matches) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(matches));
+    }
+
+    function loadRRSchedule() {
+      try {
+        const raw = localStorage.getItem(RR_STORAGE_KEY);
+        return raw ? JSON.parse(raw) : null;
+      } catch (e) {
+        console.error("Failed to parse RR schedule", e);
+        return null;
+      }
+    }
+
+    function saveRRSchedule(schedule) {
+      localStorage.setItem(RR_STORAGE_KEY, JSON.stringify(schedule));
     }
 
     const form = document.getElementById("match-form");
@@ -621,6 +678,8 @@
     const chipToggles = Array.from(document.querySelectorAll(".chip-toggle"));
     const playModeSelect = document.getElementById("playMode");
     const roundRobinToggle = document.getElementById("roundRobinToggle");
+    const rrListEl = document.getElementById("rrList");
+    const generateRRBtn = document.getElementById("generateRR");
 
     const player1Input = document.getElementById("player1");
     const player2Input = document.getElementById("player2");
@@ -630,8 +689,9 @@
     let matches = loadMatches();
     let winStateMode = "auto";
     let roundRobinOn = false;
+    let rrSchedule = loadRRSchedule();
 
-    // Win/Loss mode chips
+    // Win/Loss mode chips (not RR chip)
     chipToggles.forEach((chip) => {
       if (chip === roundRobinToggle) return;
       chip.addEventListener("click", () => {
@@ -644,7 +704,7 @@
       });
     });
 
-    // Round robin toggle
+    // Round robin toggle (per match)
     roundRobinToggle.addEventListener("click", () => {
       roundRobinOn = !roundRobinOn;
       roundRobinToggle.classList.toggle("active", roundRobinOn);
@@ -799,6 +859,22 @@
       }
     }
 
+    function renderRRSchedule() {
+      rrListEl.innerHTML = "";
+      if (!rrSchedule || !rrSchedule.matches || !rrSchedule.matches.length) {
+        const li = document.createElement("li");
+        li.textContent = "No round robin schedule yet. Enter 4 players and tap Generate.";
+        rrListEl.appendChild(li);
+        return;
+      }
+
+      rrSchedule.matches.forEach((m, idx) => {
+        const li = document.createElement("li");
+        li.textContent = `${idx + 1}. ${m.label}`;
+        rrListEl.appendChild(li);
+      });
+    }
+
     function render() {
       const { wins, losses, winPct, rating, topPartner, topPartnerRecord } =
         computeStats(matches);
@@ -902,6 +978,8 @@
           row.appendChild(resultCell);
           matchesContainer.appendChild(row);
         });
+
+      renderRRSchedule();
     }
 
     form.addEventListener("submit", (e) => {
@@ -957,11 +1035,9 @@
 
       const payload = {
         id: Date.now(),
-        // legacy field for compatibility
-        playerName: player1,
+        playerName: player1, // legacy
         partner: player2,
         opponents: [player3, player4].filter(Boolean).join(" & "),
-        // new fields
         player1,
         player2: format === "doubles" ? player2 : "",
         player3,
@@ -983,7 +1059,6 @@
       saveMatches(matches);
       render();
 
-      // Keep players for RR sessions; just clear fast-changing stuff
       document.getElementById("scoreUs").value = "";
       document.getElementById("scoreThem").value = "";
       document.getElementById("notes").value = "";
@@ -999,6 +1074,58 @@
       matches = [];
       saveMatches(matches);
       render();
+    });
+
+    generateRRBtn.addEventListener("click", () => {
+      const mode = playModeSelect.value;
+      const p1 = player1Input.value.trim();
+      const p2 = player2Input.value.trim();
+      const p3 = player3Input.value.trim();
+      const p4 = player4Input.value.trim();
+
+      if (!p1 || !p2 || !p3 || !p4) {
+        alert("For round robin, please enter all 4 player names.");
+        return;
+      }
+
+      let matchesList = [];
+
+      if (mode === "doubles") {
+        // Standard 4-player doubles RR
+        matchesList = [
+          { label: `${p1} & ${p2} vs ${p3} & ${p4}` },
+          { label: `${p1} & ${p3} vs ${p2} & ${p4}` },
+          { label: `${p1} & ${p4} vs ${p2} & ${p3}` },
+        ];
+      } else {
+        // Singles: all 1v1 pairings among 4 players
+        const singlesPairs = [
+          [p1, p2],
+          [p1, p3],
+          [p1, p4],
+          [p2, p3],
+          [p2, p4],
+          [p3, p4],
+        ];
+
+        // Shuffle pairs for randomness
+        for (let i = singlesPairs.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [singlesPairs[i], singlesPairs[j]] = [singlesPairs[j], singlesPairs[i]];
+        }
+
+        matchesList = singlesPairs.map(([a, b]) => ({
+          label: `${a} vs ${b}`,
+        }));
+      }
+
+      rrSchedule = {
+        mode,
+        createdAt: new Date().toISOString(),
+        matches: matchesList,
+      };
+      saveRRSchedule(rrSchedule);
+      renderRRSchedule();
     });
 
     // Prefill date & mode UI
