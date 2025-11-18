@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Pickleball Stats & Rating Tracker</title>
+  <title>PicklePulse — Pickleball Stats & Rating Tracker</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root {
@@ -186,16 +186,6 @@
       line-height: 1.4;
     }
 
-    .inline {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .inline > * {
-      flex: 1;
-    }
-
     .score-inputs {
       display: flex;
       align-items: center;
@@ -336,7 +326,7 @@
 
     .match-row {
       display: grid;
-      grid-template-columns: 1.2fr 0.7fr 0.7fr 0.6fr;
+      grid-template-columns: 1.2fr 0.9fr 0.6fr 0.6fr;
       padding: 8px 10px;
       font-size: 11px;
       border-bottom: 1px solid rgba(15, 23, 42, 0.9);
@@ -424,6 +414,12 @@
     .footer-note span {
       color: var(--accent);
     }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
   </style>
 </head>
 <body>
@@ -456,8 +452,11 @@
 
         <form id="match-form">
           <div class="field">
-            <label for="playerName">Your Name</label>
-            <input id="playerName" type="text" placeholder="e.g. Neil" required />
+            <label for="playMode">Format</label>
+            <select id="playMode">
+              <option value="doubles">Doubles (2 vs 2)</option>
+              <option value="singles">Singles (1 vs 1)</option>
+            </select>
           </div>
 
           <div class="field">
@@ -466,16 +465,26 @@
           </div>
 
           <div class="field">
-            <label for="partner">Partner</label>
-            <input id="partner" type="text" placeholder="e.g. Alex" />
+            <label for="player1">Player 1</label>
+            <input id="player1" type="text" placeholder="e.g. Neil" required />
           </div>
 
           <div class="field">
-            <label for="opponents">Opponents</label>
-            <input id="opponents" type="text" placeholder="e.g. Taylor & Chris" />
+            <label for="player2">Player 2</label>
+            <input id="player2" type="text" placeholder="Partner (doubles)" />
           </div>
 
           <div class="field">
+            <label for="player3">Player 3</label>
+            <input id="player3" type="text" placeholder="Opponent 1" />
+          </div>
+
+          <div class="field">
+            <label for="player4">Player 4</label>
+            <input id="player4" type="text" placeholder="Opponent 2 (doubles)" />
+          </div>
+
+          <div class="field field-full">
             <label>Score (Your side vs Opponents)</label>
             <div class="score-inputs">
               <input id="scoreUs" type="number" min="0" max="21" placeholder="11" />
@@ -488,6 +497,9 @@
               </button>
               <button type="button" class="chip-toggle" data-win-state="win">Force Win</button>
               <button type="button" class="chip-toggle" data-win-state="loss">Force Loss</button>
+              <button type="button" class="chip-toggle" id="roundRobinToggle">
+                Round robin: OFF
+              </button>
             </div>
           </div>
 
@@ -607,18 +619,59 @@
     const topPartnerEl = document.getElementById("topPartner");
     const topPartnerSubEl = document.getElementById("topPartnerSub");
     const chipToggles = Array.from(document.querySelectorAll(".chip-toggle"));
+    const playModeSelect = document.getElementById("playMode");
+    const roundRobinToggle = document.getElementById("roundRobinToggle");
+
+    const player1Input = document.getElementById("player1");
+    const player2Input = document.getElementById("player2");
+    const player3Input = document.getElementById("player3");
+    const player4Input = document.getElementById("player4");
 
     let matches = loadMatches();
     let winStateMode = "auto";
+    let roundRobinOn = false;
 
+    // Win/Loss mode chips
     chipToggles.forEach((chip) => {
+      if (chip === roundRobinToggle) return;
       chip.addEventListener("click", () => {
         const mode = chip.getAttribute("data-win-state");
         winStateMode = mode;
-        chipToggles.forEach((c) => c.classList.remove("active"));
+        chipToggles.forEach((c) => {
+          if (c !== roundRobinToggle) c.classList.remove("active");
+        });
         chip.classList.add("active");
       });
     });
+
+    // Round robin toggle
+    roundRobinToggle.addEventListener("click", () => {
+      roundRobinOn = !roundRobinOn;
+      roundRobinToggle.classList.toggle("active", roundRobinOn);
+      roundRobinToggle.textContent = roundRobinOn
+        ? "Round robin: ON"
+        : "Round robin: OFF";
+    });
+
+    // Singles vs Doubles UI
+    function updatePlayModeUI() {
+      const mode = playModeSelect.value;
+      if (mode === "singles") {
+        player2Input.value = "";
+        player4Input.value = "";
+        player2Input.disabled = true;
+        player4Input.disabled = true;
+        player2Input.placeholder = "N/A in singles";
+        player4Input.placeholder = "N/A in singles";
+      } else {
+        player2Input.disabled = false;
+        player4Input.disabled = false;
+        player2Input.placeholder = "Partner (doubles)";
+        player4Input.placeholder = "Opponent 2 (doubles)";
+      }
+    }
+
+    playModeSelect.addEventListener("change", updatePlayModeUI);
 
     function deriveWinFromScore(us, them) {
       if (us == null || them == null || isNaN(us) || isNaN(them)) return null;
@@ -657,7 +710,9 @@
         if (m.result === "win") wins++;
         else if (m.result === "loss") losses++;
 
-        const p = (m.partner || "").trim();
+        const p =
+          (m.format === "doubles" && m.player2 && m.player2.trim()) ||
+          (m.partner || "").trim();
         if (p) {
           if (!partnerStats[p]) {
             partnerStats[p] = { wins: 0, losses: 0, count: 0 };
@@ -701,7 +756,8 @@
     }
 
     function ratingTag(rating) {
-      if (rating == null) return { tag: "New Player", sub: "Log a few matches to see your trend." };
+      if (rating == null)
+        return { tag: "New Player", sub: "Log a few matches to see your trend." };
       if (rating < 3.2)
         return {
           tag: "Building Foundation",
@@ -726,6 +782,21 @@
         tag: "Elite",
         sub: "Your stats look legit. Use this tracker to prep for tournaments.",
       };
+    }
+
+    function buildMatchTitle(m) {
+      const p1 = m.player1 || "Player 1";
+      const p2 = m.player2 || "";
+      const p3 = m.player3 || "Player 3";
+      const p4 = m.player4 || "";
+
+      if (m.format === "singles") {
+        return `${p1} vs ${p3}`;
+      } else {
+        const left = [p1, p2].filter(Boolean).join(" & ") || "Team 1";
+        const right = [p3, p4].filter(Boolean).join(" & ") || "Team 2";
+        return `${left} vs ${right}`;
+      }
     }
 
     function render() {
@@ -771,20 +842,38 @@
           main.className = "match-main";
           const title = document.createElement("div");
           title.className = "match-title";
-          title.textContent = m.partner
-            ? `${m.partner} + You vs ${m.opponents || "Opponents"}`
-            : `You vs ${m.opponents || "Opponents"}`;
+          title.textContent = buildMatchTitle(m);
           const meta = document.createElement("div");
           meta.className = "match-meta";
-          meta.textContent = `${formatDateLabel(m.date)} • ${m.location || "Unknown court"}`;
+          meta.textContent = `${formatDateLabel(m.date)} • ${
+            m.location || "Unknown court"
+          }`;
           main.appendChild(title);
           main.appendChild(meta);
 
           const typeCell = document.createElement("div");
+          const badges = document.createElement("div");
+          badges.className = "badge-row";
+
           const typeBadge = document.createElement("span");
           typeBadge.className = "badge type";
           typeBadge.textContent = m.matchTypeLabel || "Rec";
-          typeCell.appendChild(typeBadge);
+          badges.appendChild(typeBadge);
+
+          const formatBadge = document.createElement("span");
+          formatBadge.className = "badge";
+          formatBadge.textContent =
+            m.format === "singles" ? "Singles" : "Doubles";
+          badges.appendChild(formatBadge);
+
+          if (m.roundRobin) {
+            const rrBadge = document.createElement("span");
+            rrBadge.className = "badge";
+            rrBadge.textContent = "RR";
+            badges.appendChild(rrBadge);
+          }
+
+          typeCell.appendChild(badges);
 
           const scoreCell = document.createElement("div");
           scoreCell.className = "score";
@@ -817,9 +906,12 @@
 
     form.addEventListener("submit", (e) => {
       e.preventDefault();
-      const playerName = document.getElementById("playerName").value.trim();
-      const partner = document.getElementById("partner").value.trim();
-      const opponents = document.getElementById("opponents").value.trim();
+      const format = playModeSelect.value;
+      const player1 = player1Input.value.trim();
+      const player2 = player2Input.value.trim();
+      const player3 = player3Input.value.trim();
+      const player4 = player4Input.value.trim();
+
       const scoreUsRaw = document.getElementById("scoreUs").value;
       const scoreThemRaw = document.getElementById("scoreThem").value;
       const matchType = document.getElementById("matchType").value;
@@ -827,18 +919,20 @@
       const notes = document.getElementById("notes").value.trim();
       const dateRaw = document.getElementById("date").value;
 
-      if (!playerName) {
-        alert("Please enter your name.");
+      if (!player1 || !player3) {
+        alert("Please enter at least Player 1 and Player 3.");
         return;
       }
 
-      let scoreUs = scoreUsRaw === "" ? null : Number(scoreUsRaw);
-      let scoreThem = scoreThemRaw === "" ? null : Number(scoreThemRaw);
+      if (scoreUsRaw === "" || scoreThemRaw === "") {
+        alert("Please enter both scores (your side and opponents).");
+        return;
+      }
 
-      if (
-        (scoreUsRaw !== "" && isNaN(scoreUs)) ||
-        (scoreThemRaw !== "" && isNaN(scoreThem))
-      ) {
+      let scoreUs = Number(scoreUsRaw);
+      let scoreThem = Number(scoreThemRaw);
+
+      if (isNaN(scoreUs) || isNaN(scoreThem)) {
         alert("Scores must be numbers.");
         return;
       }
@@ -863,9 +957,17 @@
 
       const payload = {
         id: Date.now(),
-        playerName,
-        partner,
-        opponents,
+        // legacy field for compatibility
+        playerName: player1,
+        partner: player2,
+        opponents: [player3, player4].filter(Boolean).join(" & "),
+        // new fields
+        player1,
+        player2: format === "doubles" ? player2 : "",
+        player3,
+        player4: format === "doubles" ? player4 : "",
+        format,
+        roundRobin: roundRobinOn,
         scoreUs,
         scoreThem,
         result,
@@ -881,8 +983,7 @@
       saveMatches(matches);
       render();
 
-      document.getElementById("partner").value = "";
-      document.getElementById("opponents").value = "";
+      // Keep players for RR sessions; just clear fast-changing stuff
       document.getElementById("scoreUs").value = "";
       document.getElementById("scoreThem").value = "";
       document.getElementById("notes").value = "";
@@ -900,6 +1001,7 @@
       render();
     });
 
+    // Prefill date & mode UI
     const dateInput = document.getElementById("date");
     if (dateInput && !dateInput.value) {
       const today = new Date();
@@ -909,6 +1011,7 @@
       dateInput.value = `${yyyy}-${mm}-${dd}`;
     }
 
+    updatePlayModeUI();
     render();
   </script>
 </body>
