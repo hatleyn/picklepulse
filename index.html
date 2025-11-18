@@ -15,14 +15,19 @@
       --muted: #9ca3af;
       --danger: #ef4444;
       --border: #1f2937;
-      --radius-xl: 24px;
+      --radius-xl: 22px;
+
+      --win-bg: rgba(34,197,94,0.15);
+      --win-text: #22c55e;
+      --loss-bg: rgba(239,68,68,0.15);
+      --loss-text: #ef4444;
     }
 
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
     body {
       margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+      font-family: system-ui,-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;
       background: radial-gradient(circle at top, #1e293b 0, #020617 40%, #000 100%);
       color: var(--text);
       padding: 16px;
@@ -31,25 +36,37 @@
     .app-shell { max-width: 960px; margin: 0 auto 40px; }
 
     header {
-      display: flex; align-items: center; justify-content: space-between;
-      gap: 12px; margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
     }
 
     .brand { display: flex; align-items: center; gap: 10px; }
 
     .brand-icon {
-      width: 40px; height: 40px; border-radius: 999px;
-      background: radial-gradient(circle at 30% 20%, #4ade80, #22c55e);
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #4ade80,#22c55e);
       box-shadow: 0 0 20px rgba(34, 197, 94, 0.5);
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 800; color: #022c22; font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: #022c22;
+      font-size: 20px;
     }
 
     .brand-text-title { font-weight: 700; font-size: 18px; }
     .brand-text-sub { font-size: 12px; color: var(--muted); }
 
     header .tagline {
-      font-size: 12px; color: var(--muted); max-width: 180px; text-align: right;
+      font-size: 12px;
+      color: var(--muted);
+      max-width: 200px;
+      text-align: right;
     }
 
     @media (max-width: 768px) {
@@ -58,39 +75,49 @@
     }
 
     .grid {
-      display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
       gap: 16px;
     }
 
     @media (max-width: 768px) {
-      .grid { grid-template-columns: minmax(0, 1fr); }
+      .grid { grid-template-columns: 1fr; }
     }
 
     .card {
       background: radial-gradient(circle at top left, #111827, #020617);
-      border-radius: var(--radius-xl); padding: 16px 14px 14px;
+      border-radius: var(--radius-xl);
+      padding: 16px 14px 14px;
       border: 1px solid var(--border);
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.55);
     }
 
     .card-header {
-      display: flex; justify-content: space-between; align-items: center;
-      gap: 10px; margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
     }
 
     .card-title { font-size: 14px; font-weight: 600; }
     .card-subtitle { font-size: 11px; color: var(--muted); }
 
     .pill {
-      font-size: 11px; padding: 4px 8px; border-radius: 999px;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(148, 163, 184, 0.4);
+      font-size: 11px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.4);
       color: var(--muted);
-      display: inline-flex; align-items: center; gap: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }
 
     form {
-      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 8px 12px;
     }
 
@@ -98,257 +125,372 @@
     .field-full { grid-column: 1 / -1; }
 
     label {
-      font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
       color: var(--muted);
     }
 
     input, select, textarea {
-      background: #020617; border-radius: 12px;
-      border: 1px solid #1f2937; padding: 8px 10px;
-      color: var(--text); font-size: 13px; outline: none;
+      background: #020617;
+      border-radius: 12px;
+      border: 1px solid #1f2937;
+      padding: 8px 10px;
+      color: var(--text);
+      font-size: 13px;
+      outline: none;
     }
 
     textarea { resize: vertical; min-height: 48px; }
 
     input:focus, select:focus, textarea:focus {
       border-color: var(--accent);
-      box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.5);
+      box-shadow: 0 0 0 1px rgba(34,197,94,0.5);
     }
 
-    .score-inputs { display: flex; align-items: center; gap: 4px; }
+    .score-inputs {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
     .score-inputs input { text-align: center; }
 
-    .chips-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+    .chips-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
 
     .chip-toggle {
-      font-size: 11px; padding: 4px 8px; border-radius: 999px;
-      border: 1px solid #1f2937; background: #020617;
-      cursor: pointer; color: var(--muted);
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid #1f2937;
+      background: #020617;
+      cursor: pointer;
+      color: var(--muted);
+      user-select: none;
     }
 
     .chip-toggle.active {
-      border-color: var(--accent); background: var(--accent-soft); color: var(--accent);
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: var(--accent);
     }
 
     .btn-row { display: flex; gap: 8px; margin-top: 10px; }
 
     button {
-      border-radius: 999px; border: none; padding: 9px 12px;
-      font-size: 13px; font-weight: 500; cursor: pointer;
-      display: inline-flex; align-items: center; justify-content: center;
+      border-radius: 999px;
+      border: none;
+      padding: 9px 12px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .btn-primary {
-      flex: 1; background: linear-gradient(135deg, #22c55e, #4ade80);
-      color: #022c22; box-shadow: 0 10px 25px rgba(34,197,94,0.55);
+      flex: 1;
+      background: linear-gradient(135deg, #22c55e, #4ade80);
+      color: #022c22;
+      box-shadow: 0 10px 25px rgba(34,197,94,0.55);
     }
 
-    .btn-ghost { background: rgba(15,23,42,0.95); border: 1px solid #1f2937; color: var(--muted); }
+    .btn-ghost {
+      background: rgba(15,23,42,0.95);
+      border: 1px solid #1f2937;
+      color: var(--muted);
+    }
 
-    .btn-ghost.danger { border-color: rgba(248,113,113,0.7); color: #fecaca; }
-    .btn-ghost.secondary { border-color: rgba(148,163,184,0.6); }
+    .btn-ghost.danger {
+      border-color: rgba(248,113,113,0.7);
+      color: #fecaca;
+    }
+
+    .btn-ghost.secondary {
+      border-color: rgba(148,163,184,0.6);
+    }
 
     .rr-block {
-      margin-top: 12px; padding-top: 10px; border-top: 1px dashed #1f2937;
-      font-size: 11px; color: var(--muted);
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px dashed #1f2937;
+      font-size: 11px;
+      color: var(--muted);
     }
 
-    .rr-title { font-size: 11px; font-weight: 600; color: #e5e7eb; margin-bottom: 6px; }
+    .rr-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
 
     .rr-list { margin-top: 6px; padding-left: 14px; }
     .rr-list li { margin-bottom: 4px; }
+
+    /* ---------- MATCH CARD NEW UI ---------- */
+
+    .match-entry { margin-bottom: 14px; }
+
+    .match-card {
+      background: #0a0f1c;
+      border-radius: 16px;
+      padding: 14px 16px;
+      border: 1px solid #1f2937;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .match-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .match-players { color: var(--text); }
+
+    .match-core {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .score-block {
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 700;
+    }
+
+    .result-pill {
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .win-pill {
+      background: var(--win-bg);
+      color: var(--win-text);
+    }
+
+    .loss-pill {
+      background: var(--loss-bg);
+      color: var(--loss-text);
+    }
+
+    .rating-line {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: -2px;
+      margin-bottom: -4px;
+    }
+
+    .match-footer {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--muted);
+    }
   </style>
 </head>
 
 <body>
-  <div class="app-shell">
-    <header>
-      <div class="brand">
-        <div class="brand-icon">PB</div>
-        <div>
-          <div class="brand-text-title">PicklePulse</div>
-          <div class="brand-text-sub">Your pickleball stats & RR tracker</div>
-        </div>
-      </div>
+<div class="app-shell">
+<header>
+  <div class="brand">
+    <div class="brand-icon">PB</div>
+    <div>
+      <div class="brand-text-title">PicklePulse</div>
+      <div class="brand-text-sub">Your pickleball stats & RR tracker</div>
+    </div>
+  </div>
+  <div class="tagline">Log matches fast. Auto RR mode. K-Factor rating.</div>
+</header>
 
-      <div class="tagline">Log matches fast. Auto RR mode. K-Factor rating.</div>
-    </header>
+<div class="grid">
+<!-- LEFT SIDE: MATCH FORM -->
+<section class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Add Match</div>
+      <div class="card-subtitle">Singles & doubles • K-factor rating</div>
+    </div>
+    <div class="pill"><span>🏓</span> Local Save</div>
+  </div>
 
-    <div class="grid">
+  <form id="match-form">
 
-      <!-- LEFT SIDE: MATCH FORM -->
-      <section class="card">
-        <div class="card-header">
-          <div>
-            <div class="card-title">Add Match</div>
-            <div class="card-subtitle">Singles & doubles • K-factor rating</div>
-          </div>
-          <div class="pill"><span>🏓</span> Local Save</div>
-        </div>
-
-        <form id="match-form">
-                  <!-- FORMAT -->
-          <div class="field">
-            <label for="playMode">Format</label>
-            <select id="playMode" onchange="updateFormatUI()">
-              <option value="doubles">Doubles (2 vs 2)</option>
-              <option value="singles">Singles (1 vs 1)</option>
-            </select>
-          </div>
-
-          <!-- DATE -->
-          <div class="field">
-            <label for="date">Date</label>
-            <input id="date" type="date" />
-          </div>
-
-          <!-- PLAYERS -->
-          <div class="field">
-            <label for="player1">Player 1</label>
-            <input id="player1" type="text" placeholder="e.g. Neil" required />
-          </div>
-
-          <div class="field">
-            <label for="player2">Player 2 / Opponent</label>
-            <input id="player2" type="text" placeholder="e.g. Matt" />
-          </div>
-
-          <div class="field" id="p3field">
-            <label for="player3">Player 3</label>
-            <input id="player3" type="text" placeholder="Partner / Opponent" />
-          </div>
-
-          <div class="field" id="p4field">
-            <label for="player4">Player 4</label>
-            <input id="player4" type="text" placeholder="Partner / Opponent" />
-          </div>
-
-          <!-- SCORE -->
-          <div class="field field-full">
-            <label>Score (Your side vs Opponents)</label>
-            <div class="score-inputs">
-              <input id="scoreUs" type="number" min="0" max="21" placeholder="11" />
-              <span>–</span>
-              <input id="scoreThem" type="number" min="0" max="21" placeholder="7" />
-            </div>
-
-            <div class="chips-row">
-              <button type="button" class="chip-toggle active" data-win-state="auto">Auto win/loss</button>
-              <button type="button" class="chip-toggle" data-win-state="win">Force Win</button>
-              <button type="button" class="chip-toggle" data-win-state="loss">Force Loss</button>
-
-              <button type="button" class="chip-toggle" id="roundRobinToggle">Round robin: OFF</button>
-            </div>
-          </div>
-
-          <!-- MATCH TYPE -->
-          <div class="field">
-            <label for="matchType">Match Type</label>
-            <select id="matchType">
-              <option value="rec">Rec Play</option>
-              <option value="ladder">Ladder</option>
-              <option value="league">League</option>
-              <option value="tournament">Tournament</option>
-              <option value="drills">Drills / Practice</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="location">Location</label>
-            <input id="location" type="text" placeholder="e.g. PickleRage Nocatee" />
-          </div>
-
-          <div class="field field-full">
-            <label for="notes">Quick Notes (optional)</label>
-            <textarea id="notes" placeholder="e.g. Backhand felt great."></textarea>
-          </div>
-
-          <div class="btn-row field-full">
-            <button type="submit" class="btn-primary">+ Save Match</button>
-            <button type="button" id="clearAll" class="btn-ghost danger">Clear All</button>
-          </div>
-
-        </form>
-
-        <!-- ROUND ROBIN -->
-        <div class="rr-block">
-          <div class="rr-title">Round Robin Generator</div>
-          <div>Enter 4 players. Choose format. Then generate RR.</div>
-
-          <div class="btn-row" style="margin-top: 8px;">
-            <button type="button" id="generateRR" class="btn-ghost secondary">
-              Generate RR Schedule
-            </button>
-          </div>
-
-          <div class="rr-view">
-            <ul id="rrList" class="rr-list"></ul>
-          </div>
-        </div>
-      </section>
-
-      <!-- RIGHT SIDE: STATS + MATCH LIST -->
-      <section class="card">
-        <div class="card-header">
-          <div>
-            <div class="card-title">Your Stats</div>
-            <div class="card-subtitle">Wins, streaks, rating & history.</div>
-          </div>
-          <div class="pill" id="ratingPill">Rating: 3.50</div>
-        </div>
-
-        <!-- QUICK STATS -->
-        <div class="stats-grid" style="
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 12px;
-          margin-bottom: 14px;
-        ">
-          <div class="card-mini" style="background:#020617;border:1px solid #1f2937;border-radius:16px;padding:12px;">
-            <div style="font-size:11px;color:var(--muted);">Total Matches</div>
-            <div id="statTotal" style="font-weight:700;margin-top:4px;">0</div>
-          </div>
-
-          <div class="card-mini" style="background:#020617;border:1px solid #1f2937;border-radius:16px;padding:12px;">
-            <div style="font-size:11px;color:var(--muted);">Win %</div>
-            <div id="statWinPct" style="font-weight:700;margin-top:4px;">0%</div>
-          </div>
-
-          <div class="card-mini" style="background:#020617;border:1px solid #1f2937;border-radius:16px;padding:12px;">
-            <div style="font-size:11px;color:var(--muted);">Wins</div>
-            <div id="statWins" style="font-weight:700;margin-top:4px;">0</div>
-          </div>
-
-          <div class="card-mini" style="background:#020617;border:1px solid #1f2937;border-radius:16px;padding:12px;">
-            <div style="font-size:11px;color:var(--muted);">Losses</div>
-            <div id="statLosses" style="font-weight:700;margin-top:4px;">0</div>
-          </div>
-
-          <div class="card-mini" style="background:#020617;border:1px solid #1f2937;border-radius:16px;padding:12px;">
-            <div style="font-size:11px;color:var(--muted);">Streak</div>
-            <div id="statStreak" style="font-weight:700;margin-top:4px;">0</div>
-          </div>
-
-          <div class="card-mini" style="background:#020617;border:1px solid #1f2937;border-radius:16px;padding:12px;">
-            <div style="font-size:11px;color:var(--muted);">Best Partner</div>
-            <div id="statPartner" style="font-weight:700;margin-top:4px;">–</div>
-          </div>
-        </div>
-
-        <!-- RESET STATS -->
-        <button id="resetStats" class="btn-ghost danger" style="width:100%;margin-bottom:12px;">
-          Reset All Data
-        </button>
-
-        <!-- MATCH HISTORY (Premium UI comes in Chunk C) -->
-        <div class="matches" id="matchList">
-          <div class="empty-state">No matches yet — log one!</div>
-        </div>
-      </section>
+    <!-- FORMAT -->
+    <div class="field">
+      <label for="playMode">Format</label>
+      <select id="playMode" onchange="updateFormatUI()">
+        <option value="doubles">Doubles (2 vs 2)</option>
+        <option value="singles">Singles (1 vs 1)</option>
+      </select>
     </div>
 
+    <!-- DATE -->
+    <div class="field">
+      <label for="date">Date</label>
+      <input id="date" type="date" />
+    </div>
+
+    <!-- PLAYERS -->
+    <div class="field">
+      <label for="player1">Player 1</label>
+      <input id="player1" type="text" placeholder="e.g. Neil" required />
+    </div>
+
+    <div class="field">
+      <label for="player2">Player 2 / Opponent</label>
+      <input id="player2" type="text" placeholder="e.g. Matt" />
+    </div>
+
+    <div class="field" id="p3field">
+      <label for="player3">Player 3</label>
+      <input id="player3" type="text" placeholder="Partner / Opponent" />
+    </div>
+
+    <div class="field" id="p4field">
+      <label for="player4">Player 4</label>
+      <input id="player4" type="text" placeholder="Partner / Opponent" />
+    </div>
+
+    <!-- SCORE -->
+    <div class="field field-full">
+      <label>Score (Your side vs Opponents)</label>
+      <div class="score-inputs">
+        <input id="scoreUs" type="number" min="0" max="21" placeholder="11" />
+        <span>–</span>
+        <input id="scoreThem" type="number" min="0" max="21" placeholder="7" />
+      </div>
+
+      <div class="chips-row">
+        <div class="chip-toggle active" data-win-state="auto">Auto win/loss</div>
+        <div class="chip-toggle" data-win-state="win">Force Win</div>
+        <div class="chip-toggle" data-win-state="loss">Force Loss</div>
+
+        <div class="chip-toggle" id="roundRobinToggle">Round robin: OFF</div>
+      </div>
+    </div>
+
+    <!-- MATCH TYPE -->
+    <div class="field">
+      <label for="matchType">Match Type</label>
+      <select id="matchType">
+        <option value="rec">Rec Play</option>
+        <option value="ladder">Ladder</option>
+        <option value="league">League</option>
+        <option value="tournament">Tournament</option>
+        <option value="drills">Drills / Practice</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="location">Location</label>
+      <input id="location" type="text" placeholder="e.g. PickleRage Nocatee" />
+    </div>
+
+    <div class="field field-full">
+      <label for="notes">Quick Notes (optional)</label>
+      <textarea id="notes" placeholder="e.g. Backhand felt great."></textarea>
+    </div>
+
+    <div class="btn-row field-full">
+      <button type="submit" class="btn-primary">+ Save Match</button>
+      <button type="button" id="clearAll" class="btn-ghost danger">Clear All</button>
+    </div>
+
+  </form>
+
+  <!-- ROUND ROBIN -->
+  <div class="rr-block">
+    <div class="rr-title">Round Robin Generator</div>
+    <div>Enter 4 players. Choose format. Then generate RR.</div>
+
+    <div class="btn-row" style="margin-top: 8px;">
+      <button type="button" id="generateRR" class="btn-ghost secondary">
+        Generate RR Schedule
+      </button>
+    </div>
+
+    <div class="rr-view">
+      <ul id="rrList" class="rr-list"></ul>
+    </div>
+  </div>
+</section>
+
+<!-- RIGHT SIDE -->
+<section class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Your Stats</div>
+      <div class="card-subtitle">Wins, streaks, rating & history.</div>
+    </div>
+    <div class="pill" id="ratingPill">Rating: 3.00</div>
+  </div>
+
+  <div class="stats-grid" style="
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+    margin-bottom:14px;
+  ">
+    <div class="card-mini" style="background:#020617;border:1px solid #1f2937;border-radius:16px;padding:12px;">
+      <div style="font-size:11px;color:var(--muted);">Total Matches</div>
+      <div id="statTotal" style="font-weight:700;margin-top:4px;">0</div>
+    </div>
+
+    <div class="card-mini" style="background:#020617;border:1px solid #1f2937;border-radius:16px;padding:12px;">
+      <div style="font-size:11px;color:var(--muted);">Win %</div>
+      <div id="statWinPct" style="font-weight:700;margin-top:4px;">0%</div>
+    </div>
+
+    <div class="card-mini" style="background:#020617;border:1px solid #1f2937;border-radius:16px;padding:12px;">
+      <div style="font-size:11px;color:var(--muted);">Wins</div>
+      <div id="statWins" style="font-weight:700;margin-top:4px;">0</div>
+    </div>
+
+    <div class="card-mini" style="background:#020617;border:1px solid #1f2937;border-radius:16px;padding:12px;">
+      <div style="font-size:11px;color:var(--muted);">Losses</div>
+      <div id="statLosses" style="font-weight:700;margin-top:4px;">0</div>
+    </div>
+
+    <div class="card-mini" style="background:#020617;border:1px solid #1f2937;border-radius:16px;padding:12px;">
+      <div style="font-size:11px;color:var(--muted);">Streak</div>
+      <div id="statStreak" style="font-weight:700;margin-top:4px;">0</div>
+    </div>
+
+    <div class="card-mini" style="background:#020617;border:1px solid #1f2937;border-radius:16px;padding:12px;">
+      <div style="font-size:11px;color:var(--muted);">Best Partner</div>
+      <div id="statPartner" style="font-weight:700;margin-top:4px;">–</div>
+    </div>
+  </div>
+
+  <button id="resetStats" class="btn-ghost danger" style="width:100%;margin-bottom:12px;">
+    Reset All Data
+  </button>
+
+  <div class="matches" id="matchList">
+    <div class="empty-state">No matches yet — log one!</div>
+  </div>
+
+</section>
+</div> <!-- end grid -->
+
 <!-- ============================================================
-     SCRIPT SECTION — RR Engine + K-Factor Fundamentals
+     SCRIPT SECTION — RR Engine + K-Factor + New Match Cards
 ============================================================ -->
 
 <script>
@@ -446,9 +588,9 @@ function generateRoundRobin(players, mode) {
       }
     }
   } else {
-    matches.push({ type: "doubles", team1:[players[0],players[1]], team2:[players[2],players[3]] });
-    matches.push({ type: "doubles", team1:[players[0],players[2]], team2:[players[1],players[3]] });
-    matches.push({ type: "doubles", team1:[players[0],players[3]], team2:[players[1],players[2]] });
+    matches.push({ type:"doubles", team1:[players[0],players[1]], team2:[players[2],players[3]] });
+    matches.push({ type:"doubles", team1:[players[0],players[2]], team2:[players[1],players[3]] });
+    matches.push({ type:"doubles", team1:[players[0],players[3]], team2:[players[1],players[2]] });
   }
 
   return matches;
@@ -492,31 +634,26 @@ function autofillNextRRMatch() {
     modeEl.value = "singles";
     modeEl.disabled = true;
 
-    document.getElementById("player1").value = match.p1;
-    document.getElementById("player2").value = match.p2;
-    document.getElementById("player3").value = "";
-    document.getElementById("player4").value = "";
-
+    player1.value = match.p1;
+    player2.value = match.p2;
+    player3.value = "";
+    player4.value = "";
     updateFormatUI();
+
   } else {
     modeEl.value = "doubles";
     modeEl.disabled = true;
 
-    document.getElementById("player1").value = match.team1[0];
-    document.getElementById("player2").value = match.team1[1];
-    document.getElementById("player3").value = match.team2[0];
-    document.getElementById("player4").value = match.team2[1];
-
+    player1.value = match.team1[0];
+    player2.value = match.team1[1];
+    player3.value = match.team2[0];
+    player4.value = match.team2[1];
     updateFormatUI();
   }
 
   scoreUs.value = "";
   scoreThem.value = "";
   notes.value = "";
-
-  const toggle = document.getElementById("roundRobinToggle");
-  toggle.classList.add("active");
-  toggle.textContent = "Round robin: ON";
 
   renderRRList();
 }
@@ -541,7 +678,7 @@ function advanceRR() {
    RR BUTTON
 ============================================================ */
 document.getElementById("generateRR").addEventListener("click", () => {
-  const mode = document.getElementById("playMode").value;
+  const mode = playMode.value;
 
   const p1 = player1.value.trim();
   const p2 = player2.value.trim();
@@ -553,7 +690,7 @@ document.getElementById("generateRR").addEventListener("click", () => {
     return;
   }
 
-  const players = [p1, p2, p3, p4];
+  const players = [p1,p2,p3,p4];
 
   rrSchedule = generateRoundRobin(players, mode);
   rrIndex = 0;
@@ -565,9 +702,7 @@ document.getElementById("generateRR").addEventListener("click", () => {
   autofillNextRRMatch();
 });
 
-/* ============================================================
-   RR TOGGLE
-============================================================ */
+/* RR TOGGLE */
 document.getElementById("roundRobinToggle").addEventListener("click", () => {
   if (rrActive) clearRRState();
   else {
@@ -584,10 +719,13 @@ document.getElementById("roundRobinToggle").addEventListener("click", () => {
 ============================================================ */
 let matches = JSON.parse(localStorage.getItem("matches") || "[]");
 
-// K factor setting (SINGLES & DOUBLES = 0.15 as chosen)
+// ⭐ NEW STARTING RATING
+const START_RATING = 3.00;
+
+// ⭐ K-FACTOR
 const K_VALUE = 0.15;
 
-// Compute NEW rating using K-factor formula
+// ⭐ Rating formula
 function computeRatingChange(scoreUs, scoreThem, result) {
   const margin = scoreUs - scoreThem;
   const marginFactor = margin / 11;
@@ -596,14 +734,14 @@ function computeRatingChange(scoreUs, scoreThem, result) {
   return result === "win" ? baseChange : -Math.abs(baseChange);
 }
 /* ============================================================
-   SAVE & UPDATE MATCH DATA
+   SAVE MATCHES + CALCULATE RATING
 ============================================================ */
 function saveMatches() {
   localStorage.setItem("matches", JSON.stringify(matches));
 }
 
 function calculateRating() {
-  let rating = 3.5; // starting rating, fresh reset
+  let rating = START_RATING;
   matches.forEach(m => {
     rating += m.ratingChange;
   });
@@ -634,7 +772,8 @@ function updateStats() {
 
   let bestPartner = "–";
   if (Object.keys(partnerCounts).length) {
-    bestPartner = Object.entries(partnerCounts).sort((a, b) => b[1] - a[1])[0][0];
+    bestPartner = Object.entries(partnerCounts)
+      .sort((a, b) => b[1] - a[1])[0][0];
   }
 
   statTotal.textContent = total;
@@ -648,7 +787,7 @@ function updateStats() {
 }
 
 /* ============================================================
-   PREMIUM MATCH HISTORY RENDERING
+   RENDER MATCH HISTORY — NEW MATCH CARD UI
 ============================================================ */
 function renderMatches() {
   const list = document.getElementById("matchList");
@@ -663,38 +802,39 @@ function renderMatches() {
     const row = document.createElement("div");
     row.className = "match-entry";
 
-    const badgeClass = m.result === "win" ? "badge-win" : "badge-loss";
-    const ratingChangeText = m.ratingChange > 0
-      ? `+${m.ratingChange.toFixed(3)}`
-      : m.ratingChange.toFixed(3);
+    const isWin = m.result === "win";
+    const pillClass = isWin ? "win-pill" : "loss-pill";
 
-    const players = m.mode === "singles"
-      ? `${m.p1} vs ${m.p2}`
-      : `${m.p1} & ${m.p2} vs ${m.p3} & ${m.p4}`;
+    const ratingChangeText =
+      m.ratingChange > 0 ? `+${m.ratingChange.toFixed(3)}` : m.ratingChange.toFixed(3);
+
+    const ratingLine = `${m.ratingBefore.toFixed(2)} → ${m.ratingAfter.toFixed(2)}`;
+
+    const players =
+      m.mode === "singles"
+        ? `${m.p1} vs ${m.p2}`
+        : `${m.p1} & ${m.p2} vs ${m.p3} & ${m.p4}`;
 
     row.innerHTML = `
       <div class="match-card">
         <div class="match-header">
           <div class="match-players">${players}</div>
-          <div class="match-type">${m.type}</div>
+          <div class="result-pill ${pillClass}">${m.result.toUpperCase()}</div>
         </div>
 
         <div class="match-core">
           <div class="score-block">
-            <span class="score">${m.scoreUs}</span>
-            <span class="dash">–</span>
-            <span class="score">${m.scoreThem}</span>
+            <span>${m.scoreUs}</span>
+            <span>–</span>
+            <span>${m.scoreThem}</span>
           </div>
 
-          <div class="result-block ${badgeClass}">
-            <span>${m.result.toUpperCase()}</span>
-            <small>${ratingChangeText}</small>
-          </div>
+          <div class="rating-line">${ratingLine}</div>
         </div>
 
         <div class="match-footer">
-          <div class="date">${m.date}</div>
-          <div class="location">${m.location || "No location"}</div>
+          <div>${m.mode === "singles" ? "Singles" : "Doubles"} • ${m.type}</div>
+          <div>${m.date}</div>
         </div>
       </div>
     `;
@@ -724,14 +864,11 @@ document.getElementById("match-form").addEventListener("submit", (e) => {
     return;
   }
 
-  let result = scoreUsVal > scoreThemVal ? "win" : "loss";
+  const result = scoreUsVal > scoreThemVal ? "win" : "loss";
 
   let players = {};
-  if (mode === "singles") {
-    players = { p1, p2 };
-  } else {
-    players = { p1, p2, p3, p4 };
-  }
+  if (mode === "singles") players = { p1, p2 };
+  else players = { p1, p2, p3, p4 };
 
   const ratingBefore = parseFloat(calculateRating());
   const ratingChange = computeRatingChange(scoreUsVal, scoreThemVal, result);
